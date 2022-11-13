@@ -1,0 +1,11 @@
+.idea
+.DS_Store
+
+# build artifacts
+build
+
+# output of coverage
+*.out
+
+# coverage report
+coverage.txt
