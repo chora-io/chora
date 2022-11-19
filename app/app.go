@@ -103,6 +103,10 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v5/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v5/modules/core/keeper"
+
+	"github.com/choraio/mods/intertx"
+	intertxkeeper "github.com/choraio/mods/intertx/keeper"
+	intertxmodule "github.com/choraio/mods/intertx/module"
 )
 
 const (
@@ -170,12 +174,8 @@ var (
 		ibctransfer.AppModuleBasic{},
 		ica.AppModuleBasic{},
 
-		// regen modules
-		// datamodule.Module{},
-		// ecocreditmodule.Module{},
-
 		// chora modules
-		// intertxmodule.AppModule{},
+		intertxmodule.AppModule{},
 	)
 
 	// module account permissions
@@ -191,10 +191,6 @@ var (
 		ibcfeetypes.ModuleName:      nil,
 		ibctransfertypes.ModuleName: {authtypes.Minter, authtypes.Burner},
 		icatypes.ModuleName:         nil,
-
-		// regen modules
-		// ecocredit.ModuleName:            {authtypes.Burner},
-		// baskettypes.BasketSubModuleName: {authtypes.Burner, authtypes.Minter},
 	}
 
 	// software upgrades
@@ -242,11 +238,8 @@ type App struct {
 	ICAControllerKeeper icacontrollerkeeper.Keeper
 	ICAHostKeeper       icahostkeeper.Keeper
 
-	// keepers (regen modules)
-	// ...
-
 	// keepers (chora modules)
-	// InterTxKeeper intertxkeeper.Keeper
+	InterTxKeeper intertxkeeper.Keeper
 
 	// scoped keepers (ibc modules)
 	ScopedIBCKeeper           capabilitykeeper.ScopedKeeper
@@ -255,7 +248,7 @@ type App struct {
 	ScopedICAControllerKeeper capabilitykeeper.ScopedKeeper
 
 	// scoped keepers (chora modules)
-	// ScopedInterTxKeeper capabilitykeeper.ScopedKeeper
+	ScopedInterTxKeeper capabilitykeeper.ScopedKeeper
 
 	// the module manager
 	ModuleManager *module.Manager
@@ -309,12 +302,8 @@ func NewApp(
 		icahosttypes.StoreKey,
 		icacontrollertypes.StoreKey,
 
-		// regen modules
-		// data.ModuleName,
-		// ecocredit.ModuleName,
-
 		// chora modules
-		//intertx.ModuleName,
+		intertx.ModuleName,
 	)
 
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -358,7 +347,7 @@ func NewApp(
 	app.ScopedICAHostKeeper = app.CapabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
 
 	// grant capabilities for chora modules
-	// app.ScopedInterTxKeeper = app.CapabilityKeeper.ScopeToModule(intertx.ModuleName)
+	app.ScopedInterTxKeeper = app.CapabilityKeeper.ScopeToModule(intertx.ModuleName)
 
 	// enforce statically created ScopedKeepers
 	app.CapabilityKeeper.Seal()
@@ -528,33 +517,16 @@ func NewApp(
 		govtypes.DefaultConfig(),
 	)
 
-	// add keepers (regen modules)
-	//app.DataKeeper = datamodule.NewModule(
-	//	app.keys[data.ModuleName],
-	//	app.AccountKeeper,
-	//	app.BankKeeper,
-	//)
-	//app.EcocreditKeeper = ecocreditmodule.NewModule(
-	//	app.keys[ecocredit.ModuleName],
-	//	authtypes.NewModuleAddress(govtypes.ModuleName),
-	//	app.AccountKeeper,
-	//	app.BankKeeper,
-	//	app.GetSubspace(ecocredit.DefaultParamspace),
-	//	app.GovKeeper,
-	//)
-
 	// add keepers (chora modules)
-	//app.InterTxKeeper = intertxkeeper.NewKeeper(
-	//	appCodec,
-	//	app.ICAControllerKeeper,
-	//	app.ScopedInterTxKeeper,
-	//)
-	//interTxModule := intertxmodule.NewModule(app.InterTxKeeper)
-	//interTxIBCModule := intertxmodule.NewIBCModule(app.InterTxKeeper)
+	app.InterTxKeeper = intertxkeeper.NewKeeper(
+		appCodec,
+		app.ICAControllerKeeper,
+		app.ScopedInterTxKeeper,
+	)
 
+	interTxIBCModule := intertxmodule.NewIBCModule(app.InterTxKeeper)
 	ibcTransferModule := ibctransfer.NewIBCModule(app.IBCTransferKeeper)
-	icaControllerIBCModule := icacontroller.NewIBCMiddleware(nil, app.ICAControllerKeeper)
-	// icaControllerIBCModule := icacontroller.NewIBCMiddleware(interTxIBCModule, app.ICAControllerKeeper)
+	icaControllerIBCModule := icacontroller.NewIBCMiddleware(interTxIBCModule, app.ICAControllerKeeper)
 	icaControllerStack := ibcfee.NewIBCMiddleware(icaControllerIBCModule, app.IBCFeeKeeper)
 	icaHostIBCModule := icahost.NewIBCModule(app.ICAHostKeeper)
 	icaHostStack := ibcfee.NewIBCMiddleware(icaHostIBCModule, app.IBCFeeKeeper)
@@ -604,12 +576,8 @@ func NewApp(
 		ica.NewAppModule(&app.ICAControllerKeeper, &app.ICAHostKeeper),
 		ibcfee.NewAppModule(app.IBCFeeKeeper),
 
-		// regen modules
-		// dataMod,
-		// ecocreditMod,
-
 		// chora modules
-		// interTxModule,
+		intertxmodule.NewModule(app.InterTxKeeper),
 	)
 
 	// NOTE: distr module must come before staking module
@@ -639,12 +607,8 @@ func NewApp(
 		icatypes.ModuleName,
 		ibcfeetypes.ModuleName,
 
-		// regen modules
-		// data.ModuleName,
-		// ecocredit.ModuleName,
-
 		// chora modules
-		// intertx.ModuleName,
+		intertx.ModuleName,
 	)
 
 	// NOTE: capability module must come before any modules using capabilities (e.g. IBC)
@@ -673,12 +637,8 @@ func NewApp(
 		icatypes.ModuleName,
 		ibcfeetypes.ModuleName,
 
-		// regen modules
-		// ecocredit.ModuleName,
-		// data.ModuleName,
-
 		// chora modules
-		// intertx.ModuleName,
+		intertx.ModuleName,
 	)
 
 	// NOTE: staking module must come before genutils module
@@ -708,12 +668,8 @@ func NewApp(
 		icatypes.ModuleName,
 		ibcfeetypes.ModuleName,
 
-		// regen modules
-		// ecocredit.ModuleName,
-		// data.ModuleName,
-
 		// chora modules
-		// intertx.ModuleName,
+		intertx.ModuleName,
 	)
 
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())
