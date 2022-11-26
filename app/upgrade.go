@@ -1,9 +1,14 @@
 package app
 
 import (
+	"github.com/choraio/mods/intertx"
 	"github.com/cosmos/cosmos-sdk/store/types"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+
+	"github.com/regen-network/regen-ledger/x/data"
 )
 
 // Upgrade defines a struct containing necessary fields that a SoftwareUpgradeProposal
@@ -18,4 +23,19 @@ type Upgrade struct {
 
 	// Store upgrades, should be used for any new modules introduced, new modules deleted, or store names renamed.
 	StoreUpgrades types.StoreUpgrades
+}
+
+var testnet1 = Upgrade{
+	HandlerName: "testnet-1",
+	CreateUpgradeHandler: func(mm *module.Manager, cfg module.Configurator) upgradetypes.UpgradeHandler {
+		return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
+			return mm.RunMigrations(ctx, cfg, fromVM)
+		}
+	},
+	StoreUpgrades: storetypes.StoreUpgrades{
+		Added: []string{
+			data.ModuleName,
+			intertx.ModuleName,
+		},
+	},
 }
