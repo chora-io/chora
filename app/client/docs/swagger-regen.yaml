@@ -1,0 +1,3595 @@
+swagger: '2.0'
+info:
+  title: Regen Ledger - REST and gRPC Gateway Documentation
+  description: >-
+    Documentation describing REST and gRPC endpoints for state queries and
+    broadcasting transactions.
+  version: v5.0.0
+paths:
+  /regen/data/v1/anchor-by-hash:
+    post:
+      summary: AnchorByHash queries a data anchor by the ContentHash of the data.
+      operationId: AnchorByHash
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              anchor:
+                description: anchor is information about the data anchor.
+                type: object
+                properties:
+                  iri:
+                    type: string
+                    description: iri is the IRI of the anchored data.
+                  content_hash:
+                    description: content_hash is the ContentHash of the anchored data.
+                    type: object
+                    properties:
+                      raw:
+                        description: >-
+                          Raw specifies "raw" data which does not specify a
+                          deterministic, canonical
+
+                          encoding. Users of these hashes MUST maintain a copy
+                          of the hashed data
+
+                          which is preserved bit by bit. All other content
+                          encodings specify a
+
+                          deterministic, canonical encoding allowing
+                          implementations to choose from a
+
+                          variety of alternative formats for transport and
+                          encoding while maintaining
+
+                          the guarantee that the canonical hash will not change.
+                          The media type for
+
+                          "raw" data is defined by the MediaType enum.
+                        type: object
+                        properties:
+                          hash:
+                            type: string
+                            format: byte
+                            description: >-
+                              hash represents the hash of the data based on the
+                              specified
+
+                              digest_algorithm.
+                          digest_algorithm:
+                            description: >-
+                              digest_algorithm represents the hash digest
+                              algorithm.
+                            type: string
+                            enum:
+                              - DIGEST_ALGORITHM_UNSPECIFIED
+                              - DIGEST_ALGORITHM_BLAKE2B_256
+                            default: DIGEST_ALGORITHM_UNSPECIFIED
+                            title: DigestAlgorithm is the hash digest algorithm
+                          media_type:
+                            description: media_type represents the media type for raw data.
+                            type: string
+                            enum:
+                              - RAW_MEDIA_TYPE_UNSPECIFIED
+                              - RAW_MEDIA_TYPE_TEXT_PLAIN
+                              - RAW_MEDIA_TYPE_JSON
+                              - RAW_MEDIA_TYPE_CSV
+                              - RAW_MEDIA_TYPE_XML
+                              - RAW_MEDIA_TYPE_PDF
+                              - RAW_MEDIA_TYPE_TIFF
+                              - RAW_MEDIA_TYPE_JPG
+                              - RAW_MEDIA_TYPE_PNG
+                              - RAW_MEDIA_TYPE_SVG
+                              - RAW_MEDIA_TYPE_WEBP
+                              - RAW_MEDIA_TYPE_AVIF
+                              - RAW_MEDIA_TYPE_GIF
+                              - RAW_MEDIA_TYPE_APNG
+                              - RAW_MEDIA_TYPE_MPEG
+                              - RAW_MEDIA_TYPE_MP4
+                              - RAW_MEDIA_TYPE_WEBM
+                              - RAW_MEDIA_TYPE_OGG
+                            default: RAW_MEDIA_TYPE_UNSPECIFIED
+                      graph:
+                        description: >-
+                          Graph specifies graph data that conforms to the RDF
+                          data model.
+
+                          The canonicalization algorithm used for an RDF graph
+                          is specified by
+
+                          GraphCanonicalizationAlgorithm.
+                        type: object
+                        properties:
+                          hash:
+                            type: string
+                            format: byte
+                            description: >-
+                              hash represents the hash of the data based on the
+                              specified
+
+                              digest_algorithm.
+                          digest_algorithm:
+                            description: >-
+                              digest_algorithm represents the hash digest
+                              algorithm.
+                            type: string
+                            enum:
+                              - DIGEST_ALGORITHM_UNSPECIFIED
+                              - DIGEST_ALGORITHM_BLAKE2B_256
+                            default: DIGEST_ALGORITHM_UNSPECIFIED
+                            title: DigestAlgorithm is the hash digest algorithm
+                          canonicalization_algorithm:
+                            description: >-
+                              graph_canonicalization_algorithm represents the
+                              RDF graph
+
+                              canonicalization algorithm.
+                            type: string
+                            enum:
+                              - GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                              - GRAPH_CANONICALIZATION_ALGORITHM_URDNA2015
+                            default: GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                            title: >-
+                              GraphCanonicalizationAlgorithm is the graph
+                              canonicalization algorithm
+                          merkle_tree:
+                            description: >-
+                              merkle_tree is the merkle tree type used for the
+                              graph hash, if any.
+                            type: string
+                            enum:
+                              - GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                            default: GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                            title: >-
+                              GraphMerkleTree is the graph merkle tree type used
+                              for hashing, if any
+                  timestamp:
+                    type: string
+                    format: date-time
+                    description: timestamp is the time at which the data was anchored.
+            description: QueryAnchorByHashResponse is the Query/AnchorByHash response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              content_hash:
+                description: content_hash is the ContentHash of the anchored data.
+                type: object
+                properties:
+                  raw:
+                    description: >-
+                      Raw specifies "raw" data which does not specify a
+                      deterministic, canonical
+
+                      encoding. Users of these hashes MUST maintain a copy of
+                      the hashed data
+
+                      which is preserved bit by bit. All other content encodings
+                      specify a
+
+                      deterministic, canonical encoding allowing implementations
+                      to choose from a
+
+                      variety of alternative formats for transport and encoding
+                      while maintaining
+
+                      the guarantee that the canonical hash will not change. The
+                      media type for
+
+                      "raw" data is defined by the MediaType enum.
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                        format: byte
+                        description: >-
+                          hash represents the hash of the data based on the
+                          specified
+
+                          digest_algorithm.
+                      digest_algorithm:
+                        description: digest_algorithm represents the hash digest algorithm.
+                        type: string
+                        enum:
+                          - DIGEST_ALGORITHM_UNSPECIFIED
+                          - DIGEST_ALGORITHM_BLAKE2B_256
+                        default: DIGEST_ALGORITHM_UNSPECIFIED
+                        title: DigestAlgorithm is the hash digest algorithm
+                      media_type:
+                        description: media_type represents the media type for raw data.
+                        type: string
+                        enum:
+                          - RAW_MEDIA_TYPE_UNSPECIFIED
+                          - RAW_MEDIA_TYPE_TEXT_PLAIN
+                          - RAW_MEDIA_TYPE_JSON
+                          - RAW_MEDIA_TYPE_CSV
+                          - RAW_MEDIA_TYPE_XML
+                          - RAW_MEDIA_TYPE_PDF
+                          - RAW_MEDIA_TYPE_TIFF
+                          - RAW_MEDIA_TYPE_JPG
+                          - RAW_MEDIA_TYPE_PNG
+                          - RAW_MEDIA_TYPE_SVG
+                          - RAW_MEDIA_TYPE_WEBP
+                          - RAW_MEDIA_TYPE_AVIF
+                          - RAW_MEDIA_TYPE_GIF
+                          - RAW_MEDIA_TYPE_APNG
+                          - RAW_MEDIA_TYPE_MPEG
+                          - RAW_MEDIA_TYPE_MP4
+                          - RAW_MEDIA_TYPE_WEBM
+                          - RAW_MEDIA_TYPE_OGG
+                        default: RAW_MEDIA_TYPE_UNSPECIFIED
+                  graph:
+                    description: >-
+                      Graph specifies graph data that conforms to the RDF data
+                      model.
+
+                      The canonicalization algorithm used for an RDF graph is
+                      specified by
+
+                      GraphCanonicalizationAlgorithm.
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                        format: byte
+                        description: >-
+                          hash represents the hash of the data based on the
+                          specified
+
+                          digest_algorithm.
+                      digest_algorithm:
+                        description: digest_algorithm represents the hash digest algorithm.
+                        type: string
+                        enum:
+                          - DIGEST_ALGORITHM_UNSPECIFIED
+                          - DIGEST_ALGORITHM_BLAKE2B_256
+                        default: DIGEST_ALGORITHM_UNSPECIFIED
+                        title: DigestAlgorithm is the hash digest algorithm
+                      canonicalization_algorithm:
+                        description: >-
+                          graph_canonicalization_algorithm represents the RDF
+                          graph
+
+                          canonicalization algorithm.
+                        type: string
+                        enum:
+                          - GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                          - GRAPH_CANONICALIZATION_ALGORITHM_URDNA2015
+                        default: GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                        title: >-
+                          GraphCanonicalizationAlgorithm is the graph
+                          canonicalization algorithm
+                      merkle_tree:
+                        description: >-
+                          merkle_tree is the merkle tree type used for the graph
+                          hash, if any.
+                        type: string
+                        enum:
+                          - GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                        default: GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                        title: >-
+                          GraphMerkleTree is the graph merkle tree type used for
+                          hashing, if any
+            description: QueryAnchorByHashRequest is the Query/AnchorByHash request type.
+      tags:
+        - Query
+  /regen/data/v1/anchor-by-iri/{iri}:
+    get:
+      summary: AnchorByIRI queries a data anchor by the IRI of the data.
+      operationId: AnchorByIRI
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              anchor:
+                description: anchor is information about the data anchor.
+                type: object
+                properties:
+                  iri:
+                    type: string
+                    description: iri is the IRI of the anchored data.
+                  content_hash:
+                    description: content_hash is the ContentHash of the anchored data.
+                    type: object
+                    properties:
+                      raw:
+                        description: >-
+                          Raw specifies "raw" data which does not specify a
+                          deterministic, canonical
+
+                          encoding. Users of these hashes MUST maintain a copy
+                          of the hashed data
+
+                          which is preserved bit by bit. All other content
+                          encodings specify a
+
+                          deterministic, canonical encoding allowing
+                          implementations to choose from a
+
+                          variety of alternative formats for transport and
+                          encoding while maintaining
+
+                          the guarantee that the canonical hash will not change.
+                          The media type for
+
+                          "raw" data is defined by the MediaType enum.
+                        type: object
+                        properties:
+                          hash:
+                            type: string
+                            format: byte
+                            description: >-
+                              hash represents the hash of the data based on the
+                              specified
+
+                              digest_algorithm.
+                          digest_algorithm:
+                            description: >-
+                              digest_algorithm represents the hash digest
+                              algorithm.
+                            type: string
+                            enum:
+                              - DIGEST_ALGORITHM_UNSPECIFIED
+                              - DIGEST_ALGORITHM_BLAKE2B_256
+                            default: DIGEST_ALGORITHM_UNSPECIFIED
+                            title: DigestAlgorithm is the hash digest algorithm
+                          media_type:
+                            description: media_type represents the media type for raw data.
+                            type: string
+                            enum:
+                              - RAW_MEDIA_TYPE_UNSPECIFIED
+                              - RAW_MEDIA_TYPE_TEXT_PLAIN
+                              - RAW_MEDIA_TYPE_JSON
+                              - RAW_MEDIA_TYPE_CSV
+                              - RAW_MEDIA_TYPE_XML
+                              - RAW_MEDIA_TYPE_PDF
+                              - RAW_MEDIA_TYPE_TIFF
+                              - RAW_MEDIA_TYPE_JPG
+                              - RAW_MEDIA_TYPE_PNG
+                              - RAW_MEDIA_TYPE_SVG
+                              - RAW_MEDIA_TYPE_WEBP
+                              - RAW_MEDIA_TYPE_AVIF
+                              - RAW_MEDIA_TYPE_GIF
+                              - RAW_MEDIA_TYPE_APNG
+                              - RAW_MEDIA_TYPE_MPEG
+                              - RAW_MEDIA_TYPE_MP4
+                              - RAW_MEDIA_TYPE_WEBM
+                              - RAW_MEDIA_TYPE_OGG
+                            default: RAW_MEDIA_TYPE_UNSPECIFIED
+                      graph:
+                        description: >-
+                          Graph specifies graph data that conforms to the RDF
+                          data model.
+
+                          The canonicalization algorithm used for an RDF graph
+                          is specified by
+
+                          GraphCanonicalizationAlgorithm.
+                        type: object
+                        properties:
+                          hash:
+                            type: string
+                            format: byte
+                            description: >-
+                              hash represents the hash of the data based on the
+                              specified
+
+                              digest_algorithm.
+                          digest_algorithm:
+                            description: >-
+                              digest_algorithm represents the hash digest
+                              algorithm.
+                            type: string
+                            enum:
+                              - DIGEST_ALGORITHM_UNSPECIFIED
+                              - DIGEST_ALGORITHM_BLAKE2B_256
+                            default: DIGEST_ALGORITHM_UNSPECIFIED
+                            title: DigestAlgorithm is the hash digest algorithm
+                          canonicalization_algorithm:
+                            description: >-
+                              graph_canonicalization_algorithm represents the
+                              RDF graph
+
+                              canonicalization algorithm.
+                            type: string
+                            enum:
+                              - GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                              - GRAPH_CANONICALIZATION_ALGORITHM_URDNA2015
+                            default: GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                            title: >-
+                              GraphCanonicalizationAlgorithm is the graph
+                              canonicalization algorithm
+                          merkle_tree:
+                            description: >-
+                              merkle_tree is the merkle tree type used for the
+                              graph hash, if any.
+                            type: string
+                            enum:
+                              - GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                            default: GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                            title: >-
+                              GraphMerkleTree is the graph merkle tree type used
+                              for hashing, if any
+                  timestamp:
+                    type: string
+                    format: date-time
+                    description: timestamp is the time at which the data was anchored.
+            description: QueryAnchorByIRIResponse is the Query/AnchorByIRI response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: iri
+          description: iri is the IRI of the anchored data.
+          in: path
+          required: true
+          type: string
+      tags:
+        - Query
+  /regen/data/v1/anchors/hash:
+    post:
+      summary: AnchorByHash queries a data anchor by the ContentHash of the data.
+      operationId: AnchorByHash2
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              anchor:
+                description: anchor is information about the data anchor.
+                type: object
+                properties:
+                  iri:
+                    type: string
+                    description: iri is the IRI of the anchored data.
+                  content_hash:
+                    description: content_hash is the ContentHash of the anchored data.
+                    type: object
+                    properties:
+                      raw:
+                        description: >-
+                          Raw specifies "raw" data which does not specify a
+                          deterministic, canonical
+
+                          encoding. Users of these hashes MUST maintain a copy
+                          of the hashed data
+
+                          which is preserved bit by bit. All other content
+                          encodings specify a
+
+                          deterministic, canonical encoding allowing
+                          implementations to choose from a
+
+                          variety of alternative formats for transport and
+                          encoding while maintaining
+
+                          the guarantee that the canonical hash will not change.
+                          The media type for
+
+                          "raw" data is defined by the MediaType enum.
+                        type: object
+                        properties:
+                          hash:
+                            type: string
+                            format: byte
+                            description: >-
+                              hash represents the hash of the data based on the
+                              specified
+
+                              digest_algorithm.
+                          digest_algorithm:
+                            description: >-
+                              digest_algorithm represents the hash digest
+                              algorithm.
+                            type: string
+                            enum:
+                              - DIGEST_ALGORITHM_UNSPECIFIED
+                              - DIGEST_ALGORITHM_BLAKE2B_256
+                            default: DIGEST_ALGORITHM_UNSPECIFIED
+                            title: DigestAlgorithm is the hash digest algorithm
+                          media_type:
+                            description: media_type represents the media type for raw data.
+                            type: string
+                            enum:
+                              - RAW_MEDIA_TYPE_UNSPECIFIED
+                              - RAW_MEDIA_TYPE_TEXT_PLAIN
+                              - RAW_MEDIA_TYPE_JSON
+                              - RAW_MEDIA_TYPE_CSV
+                              - RAW_MEDIA_TYPE_XML
+                              - RAW_MEDIA_TYPE_PDF
+                              - RAW_MEDIA_TYPE_TIFF
+                              - RAW_MEDIA_TYPE_JPG
+                              - RAW_MEDIA_TYPE_PNG
+                              - RAW_MEDIA_TYPE_SVG
+                              - RAW_MEDIA_TYPE_WEBP
+                              - RAW_MEDIA_TYPE_AVIF
+                              - RAW_MEDIA_TYPE_GIF
+                              - RAW_MEDIA_TYPE_APNG
+                              - RAW_MEDIA_TYPE_MPEG
+                              - RAW_MEDIA_TYPE_MP4
+                              - RAW_MEDIA_TYPE_WEBM
+                              - RAW_MEDIA_TYPE_OGG
+                            default: RAW_MEDIA_TYPE_UNSPECIFIED
+                      graph:
+                        description: >-
+                          Graph specifies graph data that conforms to the RDF
+                          data model.
+
+                          The canonicalization algorithm used for an RDF graph
+                          is specified by
+
+                          GraphCanonicalizationAlgorithm.
+                        type: object
+                        properties:
+                          hash:
+                            type: string
+                            format: byte
+                            description: >-
+                              hash represents the hash of the data based on the
+                              specified
+
+                              digest_algorithm.
+                          digest_algorithm:
+                            description: >-
+                              digest_algorithm represents the hash digest
+                              algorithm.
+                            type: string
+                            enum:
+                              - DIGEST_ALGORITHM_UNSPECIFIED
+                              - DIGEST_ALGORITHM_BLAKE2B_256
+                            default: DIGEST_ALGORITHM_UNSPECIFIED
+                            title: DigestAlgorithm is the hash digest algorithm
+                          canonicalization_algorithm:
+                            description: >-
+                              graph_canonicalization_algorithm represents the
+                              RDF graph
+
+                              canonicalization algorithm.
+                            type: string
+                            enum:
+                              - GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                              - GRAPH_CANONICALIZATION_ALGORITHM_URDNA2015
+                            default: GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                            title: >-
+                              GraphCanonicalizationAlgorithm is the graph
+                              canonicalization algorithm
+                          merkle_tree:
+                            description: >-
+                              merkle_tree is the merkle tree type used for the
+                              graph hash, if any.
+                            type: string
+                            enum:
+                              - GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                            default: GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                            title: >-
+                              GraphMerkleTree is the graph merkle tree type used
+                              for hashing, if any
+                  timestamp:
+                    type: string
+                    format: date-time
+                    description: timestamp is the time at which the data was anchored.
+            description: QueryAnchorByHashResponse is the Query/AnchorByHash response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              content_hash:
+                description: content_hash is the ContentHash of the anchored data.
+                type: object
+                properties:
+                  raw:
+                    description: >-
+                      Raw specifies "raw" data which does not specify a
+                      deterministic, canonical
+
+                      encoding. Users of these hashes MUST maintain a copy of
+                      the hashed data
+
+                      which is preserved bit by bit. All other content encodings
+                      specify a
+
+                      deterministic, canonical encoding allowing implementations
+                      to choose from a
+
+                      variety of alternative formats for transport and encoding
+                      while maintaining
+
+                      the guarantee that the canonical hash will not change. The
+                      media type for
+
+                      "raw" data is defined by the MediaType enum.
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                        format: byte
+                        description: >-
+                          hash represents the hash of the data based on the
+                          specified
+
+                          digest_algorithm.
+                      digest_algorithm:
+                        description: digest_algorithm represents the hash digest algorithm.
+                        type: string
+                        enum:
+                          - DIGEST_ALGORITHM_UNSPECIFIED
+                          - DIGEST_ALGORITHM_BLAKE2B_256
+                        default: DIGEST_ALGORITHM_UNSPECIFIED
+                        title: DigestAlgorithm is the hash digest algorithm
+                      media_type:
+                        description: media_type represents the media type for raw data.
+                        type: string
+                        enum:
+                          - RAW_MEDIA_TYPE_UNSPECIFIED
+                          - RAW_MEDIA_TYPE_TEXT_PLAIN
+                          - RAW_MEDIA_TYPE_JSON
+                          - RAW_MEDIA_TYPE_CSV
+                          - RAW_MEDIA_TYPE_XML
+                          - RAW_MEDIA_TYPE_PDF
+                          - RAW_MEDIA_TYPE_TIFF
+                          - RAW_MEDIA_TYPE_JPG
+                          - RAW_MEDIA_TYPE_PNG
+                          - RAW_MEDIA_TYPE_SVG
+                          - RAW_MEDIA_TYPE_WEBP
+                          - RAW_MEDIA_TYPE_AVIF
+                          - RAW_MEDIA_TYPE_GIF
+                          - RAW_MEDIA_TYPE_APNG
+                          - RAW_MEDIA_TYPE_MPEG
+                          - RAW_MEDIA_TYPE_MP4
+                          - RAW_MEDIA_TYPE_WEBM
+                          - RAW_MEDIA_TYPE_OGG
+                        default: RAW_MEDIA_TYPE_UNSPECIFIED
+                  graph:
+                    description: >-
+                      Graph specifies graph data that conforms to the RDF data
+                      model.
+
+                      The canonicalization algorithm used for an RDF graph is
+                      specified by
+
+                      GraphCanonicalizationAlgorithm.
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                        format: byte
+                        description: >-
+                          hash represents the hash of the data based on the
+                          specified
+
+                          digest_algorithm.
+                      digest_algorithm:
+                        description: digest_algorithm represents the hash digest algorithm.
+                        type: string
+                        enum:
+                          - DIGEST_ALGORITHM_UNSPECIFIED
+                          - DIGEST_ALGORITHM_BLAKE2B_256
+                        default: DIGEST_ALGORITHM_UNSPECIFIED
+                        title: DigestAlgorithm is the hash digest algorithm
+                      canonicalization_algorithm:
+                        description: >-
+                          graph_canonicalization_algorithm represents the RDF
+                          graph
+
+                          canonicalization algorithm.
+                        type: string
+                        enum:
+                          - GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                          - GRAPH_CANONICALIZATION_ALGORITHM_URDNA2015
+                        default: GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                        title: >-
+                          GraphCanonicalizationAlgorithm is the graph
+                          canonicalization algorithm
+                      merkle_tree:
+                        description: >-
+                          merkle_tree is the merkle tree type used for the graph
+                          hash, if any.
+                        type: string
+                        enum:
+                          - GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                        default: GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                        title: >-
+                          GraphMerkleTree is the graph merkle tree type used for
+                          hashing, if any
+            description: QueryAnchorByHashRequest is the Query/AnchorByHash request type.
+      tags:
+        - Query
+  /regen/data/v1/anchors/iri/{iri}:
+    get:
+      summary: AnchorByIRI queries a data anchor by the IRI of the data.
+      operationId: AnchorByIRI2
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              anchor:
+                description: anchor is information about the data anchor.
+                type: object
+                properties:
+                  iri:
+                    type: string
+                    description: iri is the IRI of the anchored data.
+                  content_hash:
+                    description: content_hash is the ContentHash of the anchored data.
+                    type: object
+                    properties:
+                      raw:
+                        description: >-
+                          Raw specifies "raw" data which does not specify a
+                          deterministic, canonical
+
+                          encoding. Users of these hashes MUST maintain a copy
+                          of the hashed data
+
+                          which is preserved bit by bit. All other content
+                          encodings specify a
+
+                          deterministic, canonical encoding allowing
+                          implementations to choose from a
+
+                          variety of alternative formats for transport and
+                          encoding while maintaining
+
+                          the guarantee that the canonical hash will not change.
+                          The media type for
+
+                          "raw" data is defined by the MediaType enum.
+                        type: object
+                        properties:
+                          hash:
+                            type: string
+                            format: byte
+                            description: >-
+                              hash represents the hash of the data based on the
+                              specified
+
+                              digest_algorithm.
+                          digest_algorithm:
+                            description: >-
+                              digest_algorithm represents the hash digest
+                              algorithm.
+                            type: string
+                            enum:
+                              - DIGEST_ALGORITHM_UNSPECIFIED
+                              - DIGEST_ALGORITHM_BLAKE2B_256
+                            default: DIGEST_ALGORITHM_UNSPECIFIED
+                            title: DigestAlgorithm is the hash digest algorithm
+                          media_type:
+                            description: media_type represents the media type for raw data.
+                            type: string
+                            enum:
+                              - RAW_MEDIA_TYPE_UNSPECIFIED
+                              - RAW_MEDIA_TYPE_TEXT_PLAIN
+                              - RAW_MEDIA_TYPE_JSON
+                              - RAW_MEDIA_TYPE_CSV
+                              - RAW_MEDIA_TYPE_XML
+                              - RAW_MEDIA_TYPE_PDF
+                              - RAW_MEDIA_TYPE_TIFF
+                              - RAW_MEDIA_TYPE_JPG
+                              - RAW_MEDIA_TYPE_PNG
+                              - RAW_MEDIA_TYPE_SVG
+                              - RAW_MEDIA_TYPE_WEBP
+                              - RAW_MEDIA_TYPE_AVIF
+                              - RAW_MEDIA_TYPE_GIF
+                              - RAW_MEDIA_TYPE_APNG
+                              - RAW_MEDIA_TYPE_MPEG
+                              - RAW_MEDIA_TYPE_MP4
+                              - RAW_MEDIA_TYPE_WEBM
+                              - RAW_MEDIA_TYPE_OGG
+                            default: RAW_MEDIA_TYPE_UNSPECIFIED
+                      graph:
+                        description: >-
+                          Graph specifies graph data that conforms to the RDF
+                          data model.
+
+                          The canonicalization algorithm used for an RDF graph
+                          is specified by
+
+                          GraphCanonicalizationAlgorithm.
+                        type: object
+                        properties:
+                          hash:
+                            type: string
+                            format: byte
+                            description: >-
+                              hash represents the hash of the data based on the
+                              specified
+
+                              digest_algorithm.
+                          digest_algorithm:
+                            description: >-
+                              digest_algorithm represents the hash digest
+                              algorithm.
+                            type: string
+                            enum:
+                              - DIGEST_ALGORITHM_UNSPECIFIED
+                              - DIGEST_ALGORITHM_BLAKE2B_256
+                            default: DIGEST_ALGORITHM_UNSPECIFIED
+                            title: DigestAlgorithm is the hash digest algorithm
+                          canonicalization_algorithm:
+                            description: >-
+                              graph_canonicalization_algorithm represents the
+                              RDF graph
+
+                              canonicalization algorithm.
+                            type: string
+                            enum:
+                              - GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                              - GRAPH_CANONICALIZATION_ALGORITHM_URDNA2015
+                            default: GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                            title: >-
+                              GraphCanonicalizationAlgorithm is the graph
+                              canonicalization algorithm
+                          merkle_tree:
+                            description: >-
+                              merkle_tree is the merkle tree type used for the
+                              graph hash, if any.
+                            type: string
+                            enum:
+                              - GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                            default: GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                            title: >-
+                              GraphMerkleTree is the graph merkle tree type used
+                              for hashing, if any
+                  timestamp:
+                    type: string
+                    format: date-time
+                    description: timestamp is the time at which the data was anchored.
+            description: QueryAnchorByIRIResponse is the Query/AnchorByIRI response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: iri
+          description: iri is the IRI of the anchored data.
+          in: path
+          required: true
+          type: string
+      tags:
+        - Query
+  /regen/data/v1/attestations-by-attestor/{attestor}:
+    get:
+      summary: AttestationsByAttestor queries data attestations by an attestor.
+      operationId: AttestationsByAttestor
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              attestations:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    iri:
+                      type: string
+                      description: iri is the IRI of the anchored data.
+                    attestor:
+                      type: string
+                      description: >-
+                        attestor is the address of the account that attested to
+                        the anchored data.
+                    timestamp:
+                      type: string
+                      format: date-time
+                      description: timestamp is the time at which the data was attested to.
+                  description: AttestationInfo is the information for an attestation.
+                description: attestations are the attestations by the attestor.
+              pagination:
+                description: pagination is the pagination PageResponse.
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    description: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently. It will be empty if
+                      there are no more results.
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+            description: >-
+              QueryAttestationsByAttestorResponse is the
+              Query/AttestationsByAttestor
+
+              response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: attestor
+          description: attestor is the address of the attestor.
+          in: path
+          required: true
+          type: string
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+
+
+            Since: cosmos-sdk 0.43
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  /regen/data/v1/attestations-by-hash:
+    post:
+      summary: |-
+        AttestationsByHash queries data attestations by the ContentHash of the
+        data.
+      operationId: AttestationsByHash
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              attestations:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    iri:
+                      type: string
+                      description: iri is the IRI of the anchored data.
+                    attestor:
+                      type: string
+                      description: >-
+                        attestor is the address of the account that attested to
+                        the anchored data.
+                    timestamp:
+                      type: string
+                      format: date-time
+                      description: timestamp is the time at which the data was attested to.
+                  description: AttestationInfo is the information for an attestation.
+                description: >-
+                  attestations are the attestations that have been made to the
+                  anchored data.
+              pagination:
+                description: pagination is the pagination PageResponse.
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    description: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently. It will be empty if
+                      there are no more results.
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+            description: >-
+              QueryAttestationsByHashResponse is the Query/AttestationsByHash
+              response
+
+              type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              content_hash:
+                description: content_hash is the ContentHash of the anchored data.
+                type: object
+                properties:
+                  raw:
+                    description: >-
+                      Raw specifies "raw" data which does not specify a
+                      deterministic, canonical
+
+                      encoding. Users of these hashes MUST maintain a copy of
+                      the hashed data
+
+                      which is preserved bit by bit. All other content encodings
+                      specify a
+
+                      deterministic, canonical encoding allowing implementations
+                      to choose from a
+
+                      variety of alternative formats for transport and encoding
+                      while maintaining
+
+                      the guarantee that the canonical hash will not change. The
+                      media type for
+
+                      "raw" data is defined by the MediaType enum.
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                        format: byte
+                        description: >-
+                          hash represents the hash of the data based on the
+                          specified
+
+                          digest_algorithm.
+                      digest_algorithm:
+                        description: digest_algorithm represents the hash digest algorithm.
+                        type: string
+                        enum:
+                          - DIGEST_ALGORITHM_UNSPECIFIED
+                          - DIGEST_ALGORITHM_BLAKE2B_256
+                        default: DIGEST_ALGORITHM_UNSPECIFIED
+                        title: DigestAlgorithm is the hash digest algorithm
+                      media_type:
+                        description: media_type represents the media type for raw data.
+                        type: string
+                        enum:
+                          - RAW_MEDIA_TYPE_UNSPECIFIED
+                          - RAW_MEDIA_TYPE_TEXT_PLAIN
+                          - RAW_MEDIA_TYPE_JSON
+                          - RAW_MEDIA_TYPE_CSV
+                          - RAW_MEDIA_TYPE_XML
+                          - RAW_MEDIA_TYPE_PDF
+                          - RAW_MEDIA_TYPE_TIFF
+                          - RAW_MEDIA_TYPE_JPG
+                          - RAW_MEDIA_TYPE_PNG
+                          - RAW_MEDIA_TYPE_SVG
+                          - RAW_MEDIA_TYPE_WEBP
+                          - RAW_MEDIA_TYPE_AVIF
+                          - RAW_MEDIA_TYPE_GIF
+                          - RAW_MEDIA_TYPE_APNG
+                          - RAW_MEDIA_TYPE_MPEG
+                          - RAW_MEDIA_TYPE_MP4
+                          - RAW_MEDIA_TYPE_WEBM
+                          - RAW_MEDIA_TYPE_OGG
+                        default: RAW_MEDIA_TYPE_UNSPECIFIED
+                  graph:
+                    description: >-
+                      Graph specifies graph data that conforms to the RDF data
+                      model.
+
+                      The canonicalization algorithm used for an RDF graph is
+                      specified by
+
+                      GraphCanonicalizationAlgorithm.
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                        format: byte
+                        description: >-
+                          hash represents the hash of the data based on the
+                          specified
+
+                          digest_algorithm.
+                      digest_algorithm:
+                        description: digest_algorithm represents the hash digest algorithm.
+                        type: string
+                        enum:
+                          - DIGEST_ALGORITHM_UNSPECIFIED
+                          - DIGEST_ALGORITHM_BLAKE2B_256
+                        default: DIGEST_ALGORITHM_UNSPECIFIED
+                        title: DigestAlgorithm is the hash digest algorithm
+                      canonicalization_algorithm:
+                        description: >-
+                          graph_canonicalization_algorithm represents the RDF
+                          graph
+
+                          canonicalization algorithm.
+                        type: string
+                        enum:
+                          - GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                          - GRAPH_CANONICALIZATION_ALGORITHM_URDNA2015
+                        default: GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                        title: >-
+                          GraphCanonicalizationAlgorithm is the graph
+                          canonicalization algorithm
+                      merkle_tree:
+                        description: >-
+                          merkle_tree is the merkle tree type used for the graph
+                          hash, if any.
+                        type: string
+                        enum:
+                          - GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                        default: GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                        title: >-
+                          GraphMerkleTree is the graph merkle tree type used for
+                          hashing, if any
+              pagination:
+                description: pagination is the PageRequest to use for pagination.
+                type: object
+                properties:
+                  key:
+                    type: string
+                    format: byte
+                    description: >-
+                      key is a value returned in PageResponse.next_key to begin
+
+                      querying the next page most efficiently. Only one of
+                      offset or key
+
+                      should be set.
+                  offset:
+                    type: string
+                    format: uint64
+                    description: >-
+                      offset is a numeric offset that can be used when key is
+                      unavailable.
+
+                      It is less efficient than using key. Only one of offset or
+                      key should
+
+                      be set.
+                  limit:
+                    type: string
+                    format: uint64
+                    description: >-
+                      limit is the total number of results to be returned in the
+                      result page.
+
+                      If left empty it will default to a value to be set by each
+                      app.
+                  count_total:
+                    type: boolean
+                    description: >-
+                      count_total is set to true  to indicate that the result
+                      set should include
+
+                      a count of the total number of items available for
+                      pagination in UIs.
+
+                      count_total is only respected when offset is used. It is
+                      ignored when key
+
+                      is set.
+                  reverse:
+                    type: boolean
+                    description: >-
+                      reverse is set to true if results are to be returned in
+                      the descending order.
+
+
+                      Since: cosmos-sdk 0.43
+                title: >-
+                  PageRequest is to be embedded in gRPC request messages for
+                  efficient
+
+                  pagination. Ex:
+            description: >-
+              QueryAttestationsByHashRequest is the Query/AttestationsByHash
+              request type.
+      tags:
+        - Query
+  /regen/data/v1/attestations-by-iri/{iri}:
+    get:
+      summary: AttestationsByIRI queries data attestations by the IRI of the data.
+      operationId: AttestationsByIRI
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              attestations:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    iri:
+                      type: string
+                      description: iri is the IRI of the anchored data.
+                    attestor:
+                      type: string
+                      description: >-
+                        attestor is the address of the account that attested to
+                        the anchored data.
+                    timestamp:
+                      type: string
+                      format: date-time
+                      description: timestamp is the time at which the data was attested to.
+                  description: AttestationInfo is the information for an attestation.
+                description: >-
+                  attestations are the attestations that have been made to the
+                  anchored data.
+              pagination:
+                description: pagination is the pagination PageResponse.
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    description: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently. It will be empty if
+                      there are no more results.
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+            description: >-
+              QueryAttestationsByIRIResponse is the Query/AttestationsByIRI
+              response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: iri
+          description: iri is the IRI of the anchored data.
+          in: path
+          required: true
+          type: string
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+
+
+            Since: cosmos-sdk 0.43
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  /regen/data/v1/attestations/attestor/{attestor}:
+    get:
+      summary: AttestationsByAttestor queries data attestations by an attestor.
+      operationId: AttestationsByAttestor2
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              attestations:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    iri:
+                      type: string
+                      description: iri is the IRI of the anchored data.
+                    attestor:
+                      type: string
+                      description: >-
+                        attestor is the address of the account that attested to
+                        the anchored data.
+                    timestamp:
+                      type: string
+                      format: date-time
+                      description: timestamp is the time at which the data was attested to.
+                  description: AttestationInfo is the information for an attestation.
+                description: attestations are the attestations by the attestor.
+              pagination:
+                description: pagination is the pagination PageResponse.
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    description: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently. It will be empty if
+                      there are no more results.
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+            description: >-
+              QueryAttestationsByAttestorResponse is the
+              Query/AttestationsByAttestor
+
+              response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: attestor
+          description: attestor is the address of the attestor.
+          in: path
+          required: true
+          type: string
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+
+
+            Since: cosmos-sdk 0.43
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  /regen/data/v1/attestations/hash:
+    post:
+      summary: |-
+        AttestationsByHash queries data attestations by the ContentHash of the
+        data.
+      operationId: AttestationsByHash2
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              attestations:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    iri:
+                      type: string
+                      description: iri is the IRI of the anchored data.
+                    attestor:
+                      type: string
+                      description: >-
+                        attestor is the address of the account that attested to
+                        the anchored data.
+                    timestamp:
+                      type: string
+                      format: date-time
+                      description: timestamp is the time at which the data was attested to.
+                  description: AttestationInfo is the information for an attestation.
+                description: >-
+                  attestations are the attestations that have been made to the
+                  anchored data.
+              pagination:
+                description: pagination is the pagination PageResponse.
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    description: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently. It will be empty if
+                      there are no more results.
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+            description: >-
+              QueryAttestationsByHashResponse is the Query/AttestationsByHash
+              response
+
+              type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              content_hash:
+                description: content_hash is the ContentHash of the anchored data.
+                type: object
+                properties:
+                  raw:
+                    description: >-
+                      Raw specifies "raw" data which does not specify a
+                      deterministic, canonical
+
+                      encoding. Users of these hashes MUST maintain a copy of
+                      the hashed data
+
+                      which is preserved bit by bit. All other content encodings
+                      specify a
+
+                      deterministic, canonical encoding allowing implementations
+                      to choose from a
+
+                      variety of alternative formats for transport and encoding
+                      while maintaining
+
+                      the guarantee that the canonical hash will not change. The
+                      media type for
+
+                      "raw" data is defined by the MediaType enum.
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                        format: byte
+                        description: >-
+                          hash represents the hash of the data based on the
+                          specified
+
+                          digest_algorithm.
+                      digest_algorithm:
+                        description: digest_algorithm represents the hash digest algorithm.
+                        type: string
+                        enum:
+                          - DIGEST_ALGORITHM_UNSPECIFIED
+                          - DIGEST_ALGORITHM_BLAKE2B_256
+                        default: DIGEST_ALGORITHM_UNSPECIFIED
+                        title: DigestAlgorithm is the hash digest algorithm
+                      media_type:
+                        description: media_type represents the media type for raw data.
+                        type: string
+                        enum:
+                          - RAW_MEDIA_TYPE_UNSPECIFIED
+                          - RAW_MEDIA_TYPE_TEXT_PLAIN
+                          - RAW_MEDIA_TYPE_JSON
+                          - RAW_MEDIA_TYPE_CSV
+                          - RAW_MEDIA_TYPE_XML
+                          - RAW_MEDIA_TYPE_PDF
+                          - RAW_MEDIA_TYPE_TIFF
+                          - RAW_MEDIA_TYPE_JPG
+                          - RAW_MEDIA_TYPE_PNG
+                          - RAW_MEDIA_TYPE_SVG
+                          - RAW_MEDIA_TYPE_WEBP
+                          - RAW_MEDIA_TYPE_AVIF
+                          - RAW_MEDIA_TYPE_GIF
+                          - RAW_MEDIA_TYPE_APNG
+                          - RAW_MEDIA_TYPE_MPEG
+                          - RAW_MEDIA_TYPE_MP4
+                          - RAW_MEDIA_TYPE_WEBM
+                          - RAW_MEDIA_TYPE_OGG
+                        default: RAW_MEDIA_TYPE_UNSPECIFIED
+                  graph:
+                    description: >-
+                      Graph specifies graph data that conforms to the RDF data
+                      model.
+
+                      The canonicalization algorithm used for an RDF graph is
+                      specified by
+
+                      GraphCanonicalizationAlgorithm.
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                        format: byte
+                        description: >-
+                          hash represents the hash of the data based on the
+                          specified
+
+                          digest_algorithm.
+                      digest_algorithm:
+                        description: digest_algorithm represents the hash digest algorithm.
+                        type: string
+                        enum:
+                          - DIGEST_ALGORITHM_UNSPECIFIED
+                          - DIGEST_ALGORITHM_BLAKE2B_256
+                        default: DIGEST_ALGORITHM_UNSPECIFIED
+                        title: DigestAlgorithm is the hash digest algorithm
+                      canonicalization_algorithm:
+                        description: >-
+                          graph_canonicalization_algorithm represents the RDF
+                          graph
+
+                          canonicalization algorithm.
+                        type: string
+                        enum:
+                          - GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                          - GRAPH_CANONICALIZATION_ALGORITHM_URDNA2015
+                        default: GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                        title: >-
+                          GraphCanonicalizationAlgorithm is the graph
+                          canonicalization algorithm
+                      merkle_tree:
+                        description: >-
+                          merkle_tree is the merkle tree type used for the graph
+                          hash, if any.
+                        type: string
+                        enum:
+                          - GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                        default: GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                        title: >-
+                          GraphMerkleTree is the graph merkle tree type used for
+                          hashing, if any
+              pagination:
+                description: pagination is the PageRequest to use for pagination.
+                type: object
+                properties:
+                  key:
+                    type: string
+                    format: byte
+                    description: >-
+                      key is a value returned in PageResponse.next_key to begin
+
+                      querying the next page most efficiently. Only one of
+                      offset or key
+
+                      should be set.
+                  offset:
+                    type: string
+                    format: uint64
+                    description: >-
+                      offset is a numeric offset that can be used when key is
+                      unavailable.
+
+                      It is less efficient than using key. Only one of offset or
+                      key should
+
+                      be set.
+                  limit:
+                    type: string
+                    format: uint64
+                    description: >-
+                      limit is the total number of results to be returned in the
+                      result page.
+
+                      If left empty it will default to a value to be set by each
+                      app.
+                  count_total:
+                    type: boolean
+                    description: >-
+                      count_total is set to true  to indicate that the result
+                      set should include
+
+                      a count of the total number of items available for
+                      pagination in UIs.
+
+                      count_total is only respected when offset is used. It is
+                      ignored when key
+
+                      is set.
+                  reverse:
+                    type: boolean
+                    description: >-
+                      reverse is set to true if results are to be returned in
+                      the descending order.
+
+
+                      Since: cosmos-sdk 0.43
+                title: >-
+                  PageRequest is to be embedded in gRPC request messages for
+                  efficient
+
+                  pagination. Ex:
+            description: >-
+              QueryAttestationsByHashRequest is the Query/AttestationsByHash
+              request type.
+      tags:
+        - Query
+  /regen/data/v1/attestations/iri/{iri}:
+    get:
+      summary: AttestationsByIRI queries data attestations by the IRI of the data.
+      operationId: AttestationsByIRI2
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              attestations:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    iri:
+                      type: string
+                      description: iri is the IRI of the anchored data.
+                    attestor:
+                      type: string
+                      description: >-
+                        attestor is the address of the account that attested to
+                        the anchored data.
+                    timestamp:
+                      type: string
+                      format: date-time
+                      description: timestamp is the time at which the data was attested to.
+                  description: AttestationInfo is the information for an attestation.
+                description: >-
+                  attestations are the attestations that have been made to the
+                  anchored data.
+              pagination:
+                description: pagination is the pagination PageResponse.
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    description: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently. It will be empty if
+                      there are no more results.
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+            description: >-
+              QueryAttestationsByIRIResponse is the Query/AttestationsByIRI
+              response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: iri
+          description: iri is the IRI of the anchored data.
+          in: path
+          required: true
+          type: string
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+
+
+            Since: cosmos-sdk 0.43
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  /regen/data/v1/convert-hash-to-iri:
+    post:
+      summary: ConvertHashToIRI converts a ContentHash to an IRI.
+      operationId: ConvertHashToIRI
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              iri:
+                type: string
+                description: iri is the IRI converted from the ContentHash.
+            description: >-
+              ConvertHashToIRIResponse is the Query/ConvertHashToIRI response
+              type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              content_hash:
+                description: content_hash is the ContentHash to convert to an IRI.
+                type: object
+                properties:
+                  raw:
+                    description: >-
+                      Raw specifies "raw" data which does not specify a
+                      deterministic, canonical
+
+                      encoding. Users of these hashes MUST maintain a copy of
+                      the hashed data
+
+                      which is preserved bit by bit. All other content encodings
+                      specify a
+
+                      deterministic, canonical encoding allowing implementations
+                      to choose from a
+
+                      variety of alternative formats for transport and encoding
+                      while maintaining
+
+                      the guarantee that the canonical hash will not change. The
+                      media type for
+
+                      "raw" data is defined by the MediaType enum.
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                        format: byte
+                        description: >-
+                          hash represents the hash of the data based on the
+                          specified
+
+                          digest_algorithm.
+                      digest_algorithm:
+                        description: digest_algorithm represents the hash digest algorithm.
+                        type: string
+                        enum:
+                          - DIGEST_ALGORITHM_UNSPECIFIED
+                          - DIGEST_ALGORITHM_BLAKE2B_256
+                        default: DIGEST_ALGORITHM_UNSPECIFIED
+                        title: DigestAlgorithm is the hash digest algorithm
+                      media_type:
+                        description: media_type represents the media type for raw data.
+                        type: string
+                        enum:
+                          - RAW_MEDIA_TYPE_UNSPECIFIED
+                          - RAW_MEDIA_TYPE_TEXT_PLAIN
+                          - RAW_MEDIA_TYPE_JSON
+                          - RAW_MEDIA_TYPE_CSV
+                          - RAW_MEDIA_TYPE_XML
+                          - RAW_MEDIA_TYPE_PDF
+                          - RAW_MEDIA_TYPE_TIFF
+                          - RAW_MEDIA_TYPE_JPG
+                          - RAW_MEDIA_TYPE_PNG
+                          - RAW_MEDIA_TYPE_SVG
+                          - RAW_MEDIA_TYPE_WEBP
+                          - RAW_MEDIA_TYPE_AVIF
+                          - RAW_MEDIA_TYPE_GIF
+                          - RAW_MEDIA_TYPE_APNG
+                          - RAW_MEDIA_TYPE_MPEG
+                          - RAW_MEDIA_TYPE_MP4
+                          - RAW_MEDIA_TYPE_WEBM
+                          - RAW_MEDIA_TYPE_OGG
+                        default: RAW_MEDIA_TYPE_UNSPECIFIED
+                  graph:
+                    description: >-
+                      Graph specifies graph data that conforms to the RDF data
+                      model.
+
+                      The canonicalization algorithm used for an RDF graph is
+                      specified by
+
+                      GraphCanonicalizationAlgorithm.
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                        format: byte
+                        description: >-
+                          hash represents the hash of the data based on the
+                          specified
+
+                          digest_algorithm.
+                      digest_algorithm:
+                        description: digest_algorithm represents the hash digest algorithm.
+                        type: string
+                        enum:
+                          - DIGEST_ALGORITHM_UNSPECIFIED
+                          - DIGEST_ALGORITHM_BLAKE2B_256
+                        default: DIGEST_ALGORITHM_UNSPECIFIED
+                        title: DigestAlgorithm is the hash digest algorithm
+                      canonicalization_algorithm:
+                        description: >-
+                          graph_canonicalization_algorithm represents the RDF
+                          graph
+
+                          canonicalization algorithm.
+                        type: string
+                        enum:
+                          - GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                          - GRAPH_CANONICALIZATION_ALGORITHM_URDNA2015
+                        default: GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                        title: >-
+                          GraphCanonicalizationAlgorithm is the graph
+                          canonicalization algorithm
+                      merkle_tree:
+                        description: >-
+                          merkle_tree is the merkle tree type used for the graph
+                          hash, if any.
+                        type: string
+                        enum:
+                          - GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                        default: GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                        title: >-
+                          GraphMerkleTree is the graph merkle tree type used for
+                          hashing, if any
+            description: >-
+              ConvertHashToIRIRequest is the Query/ConvertHashToIRI request
+              type.
+      tags:
+        - Query
+  /regen/data/v1/convert-iri-to-hash/{iri}:
+    get:
+      summary: ConvertIRIToHash converts an IRI to a ContentHash.
+      operationId: ConvertIRIToHash
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              content_hash:
+                description: content_hash is the ContentHash converted from the IRI.
+                type: object
+                properties:
+                  raw:
+                    description: >-
+                      Raw specifies "raw" data which does not specify a
+                      deterministic, canonical
+
+                      encoding. Users of these hashes MUST maintain a copy of
+                      the hashed data
+
+                      which is preserved bit by bit. All other content encodings
+                      specify a
+
+                      deterministic, canonical encoding allowing implementations
+                      to choose from a
+
+                      variety of alternative formats for transport and encoding
+                      while maintaining
+
+                      the guarantee that the canonical hash will not change. The
+                      media type for
+
+                      "raw" data is defined by the MediaType enum.
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                        format: byte
+                        description: >-
+                          hash represents the hash of the data based on the
+                          specified
+
+                          digest_algorithm.
+                      digest_algorithm:
+                        description: digest_algorithm represents the hash digest algorithm.
+                        type: string
+                        enum:
+                          - DIGEST_ALGORITHM_UNSPECIFIED
+                          - DIGEST_ALGORITHM_BLAKE2B_256
+                        default: DIGEST_ALGORITHM_UNSPECIFIED
+                        title: DigestAlgorithm is the hash digest algorithm
+                      media_type:
+                        description: media_type represents the media type for raw data.
+                        type: string
+                        enum:
+                          - RAW_MEDIA_TYPE_UNSPECIFIED
+                          - RAW_MEDIA_TYPE_TEXT_PLAIN
+                          - RAW_MEDIA_TYPE_JSON
+                          - RAW_MEDIA_TYPE_CSV
+                          - RAW_MEDIA_TYPE_XML
+                          - RAW_MEDIA_TYPE_PDF
+                          - RAW_MEDIA_TYPE_TIFF
+                          - RAW_MEDIA_TYPE_JPG
+                          - RAW_MEDIA_TYPE_PNG
+                          - RAW_MEDIA_TYPE_SVG
+                          - RAW_MEDIA_TYPE_WEBP
+                          - RAW_MEDIA_TYPE_AVIF
+                          - RAW_MEDIA_TYPE_GIF
+                          - RAW_MEDIA_TYPE_APNG
+                          - RAW_MEDIA_TYPE_MPEG
+                          - RAW_MEDIA_TYPE_MP4
+                          - RAW_MEDIA_TYPE_WEBM
+                          - RAW_MEDIA_TYPE_OGG
+                        default: RAW_MEDIA_TYPE_UNSPECIFIED
+                  graph:
+                    description: >-
+                      Graph specifies graph data that conforms to the RDF data
+                      model.
+
+                      The canonicalization algorithm used for an RDF graph is
+                      specified by
+
+                      GraphCanonicalizationAlgorithm.
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                        format: byte
+                        description: >-
+                          hash represents the hash of the data based on the
+                          specified
+
+                          digest_algorithm.
+                      digest_algorithm:
+                        description: digest_algorithm represents the hash digest algorithm.
+                        type: string
+                        enum:
+                          - DIGEST_ALGORITHM_UNSPECIFIED
+                          - DIGEST_ALGORITHM_BLAKE2B_256
+                        default: DIGEST_ALGORITHM_UNSPECIFIED
+                        title: DigestAlgorithm is the hash digest algorithm
+                      canonicalization_algorithm:
+                        description: >-
+                          graph_canonicalization_algorithm represents the RDF
+                          graph
+
+                          canonicalization algorithm.
+                        type: string
+                        enum:
+                          - GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                          - GRAPH_CANONICALIZATION_ALGORITHM_URDNA2015
+                        default: GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                        title: >-
+                          GraphCanonicalizationAlgorithm is the graph
+                          canonicalization algorithm
+                      merkle_tree:
+                        description: >-
+                          merkle_tree is the merkle tree type used for the graph
+                          hash, if any.
+                        type: string
+                        enum:
+                          - GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                        default: GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                        title: >-
+                          GraphMerkleTree is the graph merkle tree type used for
+                          hashing, if any
+            description: >-
+              ConvertIRIToHashResponse is the Query/ConvertIRIToHash response
+              type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: iri
+          description: iri is the IRI to convert to a ContentHash.
+          in: path
+          required: true
+          type: string
+      tags:
+        - Query
+  /regen/data/v1/resolver/{id}:
+    get:
+      summary: Resolver queries a resolver by its unique identifier.
+      operationId: Resolver
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              resolver:
+                description: resolver is information about the resolver.
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uint64
+                    description: id is the ID of the resolver.
+                  url:
+                    type: string
+                    description: url is the URL of the resolver.
+                  manager:
+                    type: string
+                    description: >-
+                      manager is the address of the account that manages the
+                      resolver.
+            description: QueryResolverResponse is the Query/Resolver response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: id
+          description: id is the ID of the resolver.
+          in: path
+          required: true
+          type: string
+          format: uint64
+      tags:
+        - Query
+  /regen/data/v1/resolvers-by-hash:
+    post:
+      summary: >-
+        ResolversByHash queries resolvers with registered data by the
+        ContentHash
+
+        of the data.
+      operationId: ResolversByHash
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              resolvers:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uint64
+                      description: id is the ID of the resolver.
+                    url:
+                      type: string
+                      description: url is the URL of the resolver.
+                    manager:
+                      type: string
+                      description: >-
+                        manager is the address of the account that manages the
+                        resolver.
+                  description: ResolverInfo is the information for a resolver.
+                description: resolvers are the resolvers that have registered the data.
+              pagination:
+                description: pagination is the PageResponse to use for pagination.
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    description: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently. It will be empty if
+                      there are no more results.
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+            description: >-
+              QueryResolversByHashResponse is the Query/ResolversByHash response
+              type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              content_hash:
+                description: content_hash is the ContentHash of the anchored data.
+                type: object
+                properties:
+                  raw:
+                    description: >-
+                      Raw specifies "raw" data which does not specify a
+                      deterministic, canonical
+
+                      encoding. Users of these hashes MUST maintain a copy of
+                      the hashed data
+
+                      which is preserved bit by bit. All other content encodings
+                      specify a
+
+                      deterministic, canonical encoding allowing implementations
+                      to choose from a
+
+                      variety of alternative formats for transport and encoding
+                      while maintaining
+
+                      the guarantee that the canonical hash will not change. The
+                      media type for
+
+                      "raw" data is defined by the MediaType enum.
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                        format: byte
+                        description: >-
+                          hash represents the hash of the data based on the
+                          specified
+
+                          digest_algorithm.
+                      digest_algorithm:
+                        description: digest_algorithm represents the hash digest algorithm.
+                        type: string
+                        enum:
+                          - DIGEST_ALGORITHM_UNSPECIFIED
+                          - DIGEST_ALGORITHM_BLAKE2B_256
+                        default: DIGEST_ALGORITHM_UNSPECIFIED
+                        title: DigestAlgorithm is the hash digest algorithm
+                      media_type:
+                        description: media_type represents the media type for raw data.
+                        type: string
+                        enum:
+                          - RAW_MEDIA_TYPE_UNSPECIFIED
+                          - RAW_MEDIA_TYPE_TEXT_PLAIN
+                          - RAW_MEDIA_TYPE_JSON
+                          - RAW_MEDIA_TYPE_CSV
+                          - RAW_MEDIA_TYPE_XML
+                          - RAW_MEDIA_TYPE_PDF
+                          - RAW_MEDIA_TYPE_TIFF
+                          - RAW_MEDIA_TYPE_JPG
+                          - RAW_MEDIA_TYPE_PNG
+                          - RAW_MEDIA_TYPE_SVG
+                          - RAW_MEDIA_TYPE_WEBP
+                          - RAW_MEDIA_TYPE_AVIF
+                          - RAW_MEDIA_TYPE_GIF
+                          - RAW_MEDIA_TYPE_APNG
+                          - RAW_MEDIA_TYPE_MPEG
+                          - RAW_MEDIA_TYPE_MP4
+                          - RAW_MEDIA_TYPE_WEBM
+                          - RAW_MEDIA_TYPE_OGG
+                        default: RAW_MEDIA_TYPE_UNSPECIFIED
+                  graph:
+                    description: >-
+                      Graph specifies graph data that conforms to the RDF data
+                      model.
+
+                      The canonicalization algorithm used for an RDF graph is
+                      specified by
+
+                      GraphCanonicalizationAlgorithm.
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                        format: byte
+                        description: >-
+                          hash represents the hash of the data based on the
+                          specified
+
+                          digest_algorithm.
+                      digest_algorithm:
+                        description: digest_algorithm represents the hash digest algorithm.
+                        type: string
+                        enum:
+                          - DIGEST_ALGORITHM_UNSPECIFIED
+                          - DIGEST_ALGORITHM_BLAKE2B_256
+                        default: DIGEST_ALGORITHM_UNSPECIFIED
+                        title: DigestAlgorithm is the hash digest algorithm
+                      canonicalization_algorithm:
+                        description: >-
+                          graph_canonicalization_algorithm represents the RDF
+                          graph
+
+                          canonicalization algorithm.
+                        type: string
+                        enum:
+                          - GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                          - GRAPH_CANONICALIZATION_ALGORITHM_URDNA2015
+                        default: GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                        title: >-
+                          GraphCanonicalizationAlgorithm is the graph
+                          canonicalization algorithm
+                      merkle_tree:
+                        description: >-
+                          merkle_tree is the merkle tree type used for the graph
+                          hash, if any.
+                        type: string
+                        enum:
+                          - GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                        default: GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                        title: >-
+                          GraphMerkleTree is the graph merkle tree type used for
+                          hashing, if any
+              pagination:
+                description: pagination is the PageRequest to use for pagination.
+                type: object
+                properties:
+                  key:
+                    type: string
+                    format: byte
+                    description: >-
+                      key is a value returned in PageResponse.next_key to begin
+
+                      querying the next page most efficiently. Only one of
+                      offset or key
+
+                      should be set.
+                  offset:
+                    type: string
+                    format: uint64
+                    description: >-
+                      offset is a numeric offset that can be used when key is
+                      unavailable.
+
+                      It is less efficient than using key. Only one of offset or
+                      key should
+
+                      be set.
+                  limit:
+                    type: string
+                    format: uint64
+                    description: >-
+                      limit is the total number of results to be returned in the
+                      result page.
+
+                      If left empty it will default to a value to be set by each
+                      app.
+                  count_total:
+                    type: boolean
+                    description: >-
+                      count_total is set to true  to indicate that the result
+                      set should include
+
+                      a count of the total number of items available for
+                      pagination in UIs.
+
+                      count_total is only respected when offset is used. It is
+                      ignored when key
+
+                      is set.
+                  reverse:
+                    type: boolean
+                    description: >-
+                      reverse is set to true if results are to be returned in
+                      the descending order.
+
+
+                      Since: cosmos-sdk 0.43
+                title: >-
+                  PageRequest is to be embedded in gRPC request messages for
+                  efficient
+
+                  pagination. Ex:
+            description: >-
+              QueryResolversByHashRequest is the Query/ResolversByHash request
+              type.
+      tags:
+        - Query
+  /regen/data/v1/resolvers-by-iri/{iri}:
+    get:
+      summary: |-
+        ResolversByIRI queries resolvers with registered data by the IRI of the
+        data.
+      operationId: ResolversByIRI
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              resolvers:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uint64
+                      description: id is the ID of the resolver.
+                    url:
+                      type: string
+                      description: url is the URL of the resolver.
+                    manager:
+                      type: string
+                      description: >-
+                        manager is the address of the account that manages the
+                        resolver.
+                  description: ResolverInfo is the information for a resolver.
+                description: >-
+                  resolvers are the resolvers that have registered the anchored
+                  data.
+              pagination:
+                description: pagination is the PageResponse to use for pagination.
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    description: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently. It will be empty if
+                      there are no more results.
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+            description: >-
+              QueryResolversByIRIResponse is the Query/ResolversByIRI response
+              type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: iri
+          description: iri is the IRI of the anchored data.
+          in: path
+          required: true
+          type: string
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+
+
+            Since: cosmos-sdk 0.43
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  /regen/data/v1/resolvers-by-url:
+    post:
+      summary: ResolversByURL queries resolvers by URL.
+      operationId: ResolversByURL
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              resolvers:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uint64
+                      description: id is the ID of the resolver.
+                    url:
+                      type: string
+                      description: url is the URL of the resolver.
+                    manager:
+                      type: string
+                      description: >-
+                        manager is the address of the account that manages the
+                        resolver.
+                  description: ResolverInfo is the information for a resolver.
+                description: resolvers are the resolvers that have a matching URL.
+              pagination:
+                description: pagination is the PageResponse to use for pagination.
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    description: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently. It will be empty if
+                      there are no more results.
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+            description: >-
+              QueryResolversByURLResponse is the Query/ResolversByURL response
+              type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              url:
+                type: string
+                description: url is the URL of the resolver.
+              pagination:
+                description: pagination is the PageRequest to use for pagination.
+                type: object
+                properties:
+                  key:
+                    type: string
+                    format: byte
+                    description: >-
+                      key is a value returned in PageResponse.next_key to begin
+
+                      querying the next page most efficiently. Only one of
+                      offset or key
+
+                      should be set.
+                  offset:
+                    type: string
+                    format: uint64
+                    description: >-
+                      offset is a numeric offset that can be used when key is
+                      unavailable.
+
+                      It is less efficient than using key. Only one of offset or
+                      key should
+
+                      be set.
+                  limit:
+                    type: string
+                    format: uint64
+                    description: >-
+                      limit is the total number of results to be returned in the
+                      result page.
+
+                      If left empty it will default to a value to be set by each
+                      app.
+                  count_total:
+                    type: boolean
+                    description: >-
+                      count_total is set to true  to indicate that the result
+                      set should include
+
+                      a count of the total number of items available for
+                      pagination in UIs.
+
+                      count_total is only respected when offset is used. It is
+                      ignored when key
+
+                      is set.
+                  reverse:
+                    type: boolean
+                    description: >-
+                      reverse is set to true if results are to be returned in
+                      the descending order.
+
+
+                      Since: cosmos-sdk 0.43
+                title: >-
+                  PageRequest is to be embedded in gRPC request messages for
+                  efficient
+
+                  pagination. Ex:
+            description: >-
+              QueryResolversByURLRequest is the Query/ResolversByURL request
+              type.
+      tags:
+        - Query
+  /regen/data/v1/resolvers/hash:
+    post:
+      summary: >-
+        ResolversByHash queries resolvers with registered data by the
+        ContentHash
+
+        of the data.
+      operationId: ResolversByHash2
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              resolvers:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uint64
+                      description: id is the ID of the resolver.
+                    url:
+                      type: string
+                      description: url is the URL of the resolver.
+                    manager:
+                      type: string
+                      description: >-
+                        manager is the address of the account that manages the
+                        resolver.
+                  description: ResolverInfo is the information for a resolver.
+                description: resolvers are the resolvers that have registered the data.
+              pagination:
+                description: pagination is the PageResponse to use for pagination.
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    description: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently. It will be empty if
+                      there are no more results.
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+            description: >-
+              QueryResolversByHashResponse is the Query/ResolversByHash response
+              type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              content_hash:
+                description: content_hash is the ContentHash of the anchored data.
+                type: object
+                properties:
+                  raw:
+                    description: >-
+                      Raw specifies "raw" data which does not specify a
+                      deterministic, canonical
+
+                      encoding. Users of these hashes MUST maintain a copy of
+                      the hashed data
+
+                      which is preserved bit by bit. All other content encodings
+                      specify a
+
+                      deterministic, canonical encoding allowing implementations
+                      to choose from a
+
+                      variety of alternative formats for transport and encoding
+                      while maintaining
+
+                      the guarantee that the canonical hash will not change. The
+                      media type for
+
+                      "raw" data is defined by the MediaType enum.
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                        format: byte
+                        description: >-
+                          hash represents the hash of the data based on the
+                          specified
+
+                          digest_algorithm.
+                      digest_algorithm:
+                        description: digest_algorithm represents the hash digest algorithm.
+                        type: string
+                        enum:
+                          - DIGEST_ALGORITHM_UNSPECIFIED
+                          - DIGEST_ALGORITHM_BLAKE2B_256
+                        default: DIGEST_ALGORITHM_UNSPECIFIED
+                        title: DigestAlgorithm is the hash digest algorithm
+                      media_type:
+                        description: media_type represents the media type for raw data.
+                        type: string
+                        enum:
+                          - RAW_MEDIA_TYPE_UNSPECIFIED
+                          - RAW_MEDIA_TYPE_TEXT_PLAIN
+                          - RAW_MEDIA_TYPE_JSON
+                          - RAW_MEDIA_TYPE_CSV
+                          - RAW_MEDIA_TYPE_XML
+                          - RAW_MEDIA_TYPE_PDF
+                          - RAW_MEDIA_TYPE_TIFF
+                          - RAW_MEDIA_TYPE_JPG
+                          - RAW_MEDIA_TYPE_PNG
+                          - RAW_MEDIA_TYPE_SVG
+                          - RAW_MEDIA_TYPE_WEBP
+                          - RAW_MEDIA_TYPE_AVIF
+                          - RAW_MEDIA_TYPE_GIF
+                          - RAW_MEDIA_TYPE_APNG
+                          - RAW_MEDIA_TYPE_MPEG
+                          - RAW_MEDIA_TYPE_MP4
+                          - RAW_MEDIA_TYPE_WEBM
+                          - RAW_MEDIA_TYPE_OGG
+                        default: RAW_MEDIA_TYPE_UNSPECIFIED
+                  graph:
+                    description: >-
+                      Graph specifies graph data that conforms to the RDF data
+                      model.
+
+                      The canonicalization algorithm used for an RDF graph is
+                      specified by
+
+                      GraphCanonicalizationAlgorithm.
+                    type: object
+                    properties:
+                      hash:
+                        type: string
+                        format: byte
+                        description: >-
+                          hash represents the hash of the data based on the
+                          specified
+
+                          digest_algorithm.
+                      digest_algorithm:
+                        description: digest_algorithm represents the hash digest algorithm.
+                        type: string
+                        enum:
+                          - DIGEST_ALGORITHM_UNSPECIFIED
+                          - DIGEST_ALGORITHM_BLAKE2B_256
+                        default: DIGEST_ALGORITHM_UNSPECIFIED
+                        title: DigestAlgorithm is the hash digest algorithm
+                      canonicalization_algorithm:
+                        description: >-
+                          graph_canonicalization_algorithm represents the RDF
+                          graph
+
+                          canonicalization algorithm.
+                        type: string
+                        enum:
+                          - GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                          - GRAPH_CANONICALIZATION_ALGORITHM_URDNA2015
+                        default: GRAPH_CANONICALIZATION_ALGORITHM_UNSPECIFIED
+                        title: >-
+                          GraphCanonicalizationAlgorithm is the graph
+                          canonicalization algorithm
+                      merkle_tree:
+                        description: >-
+                          merkle_tree is the merkle tree type used for the graph
+                          hash, if any.
+                        type: string
+                        enum:
+                          - GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                        default: GRAPH_MERKLE_TREE_NONE_UNSPECIFIED
+                        title: >-
+                          GraphMerkleTree is the graph merkle tree type used for
+                          hashing, if any
+              pagination:
+                description: pagination is the PageRequest to use for pagination.
+                type: object
+                properties:
+                  key:
+                    type: string
+                    format: byte
+                    description: >-
+                      key is a value returned in PageResponse.next_key to begin
+
+                      querying the next page most efficiently. Only one of
+                      offset or key
+
+                      should be set.
+                  offset:
+                    type: string
+                    format: uint64
+                    description: >-
+                      offset is a numeric offset that can be used when key is
+                      unavailable.
+
+                      It is less efficient than using key. Only one of offset or
+                      key should
+
+                      be set.
+                  limit:
+                    type: string
+                    format: uint64
+                    description: >-
+                      limit is the total number of results to be returned in the
+                      result page.
+
+                      If left empty it will default to a value to be set by each
+                      app.
+                  count_total:
+                    type: boolean
+                    description: >-
+                      count_total is set to true  to indicate that the result
+                      set should include
+
+                      a count of the total number of items available for
+                      pagination in UIs.
+
+                      count_total is only respected when offset is used. It is
+                      ignored when key
+
+                      is set.
+                  reverse:
+                    type: boolean
+                    description: >-
+                      reverse is set to true if results are to be returned in
+                      the descending order.
+
+
+                      Since: cosmos-sdk 0.43
+                title: >-
+                  PageRequest is to be embedded in gRPC request messages for
+                  efficient
+
+                  pagination. Ex:
+            description: >-
+              QueryResolversByHashRequest is the Query/ResolversByHash request
+              type.
+      tags:
+        - Query
+  /regen/data/v1/resolvers/iri/{iri}:
+    get:
+      summary: |-
+        ResolversByIRI queries resolvers with registered data by the IRI of the
+        data.
+      operationId: ResolversByIRI2
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              resolvers:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uint64
+                      description: id is the ID of the resolver.
+                    url:
+                      type: string
+                      description: url is the URL of the resolver.
+                    manager:
+                      type: string
+                      description: >-
+                        manager is the address of the account that manages the
+                        resolver.
+                  description: ResolverInfo is the information for a resolver.
+                description: >-
+                  resolvers are the resolvers that have registered the anchored
+                  data.
+              pagination:
+                description: pagination is the PageResponse to use for pagination.
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    description: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently. It will be empty if
+                      there are no more results.
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+            description: >-
+              QueryResolversByIRIResponse is the Query/ResolversByIRI response
+              type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: iri
+          description: iri is the IRI of the anchored data.
+          in: path
+          required: true
+          type: string
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+
+
+            Since: cosmos-sdk 0.43
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  /regen/data/v1/resolvers/url:
+    post:
+      summary: ResolversByURL queries resolvers by URL.
+      operationId: ResolversByURL2
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              resolvers:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uint64
+                      description: id is the ID of the resolver.
+                    url:
+                      type: string
+                      description: url is the URL of the resolver.
+                    manager:
+                      type: string
+                      description: >-
+                        manager is the address of the account that manages the
+                        resolver.
+                  description: ResolverInfo is the information for a resolver.
+                description: resolvers are the resolvers that have a matching URL.
+              pagination:
+                description: pagination is the PageResponse to use for pagination.
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    description: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently. It will be empty if
+                      there are no more results.
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+            description: >-
+              QueryResolversByURLResponse is the Query/ResolversByURL response
+              type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              url:
+                type: string
+                description: url is the URL of the resolver.
+              pagination:
+                description: pagination is the PageRequest to use for pagination.
+                type: object
+                properties:
+                  key:
+                    type: string
+                    format: byte
+                    description: >-
+                      key is a value returned in PageResponse.next_key to begin
+
+                      querying the next page most efficiently. Only one of
+                      offset or key
+
+                      should be set.
+                  offset:
+                    type: string
+                    format: uint64
+                    description: >-
+                      offset is a numeric offset that can be used when key is
+                      unavailable.
+
+                      It is less efficient than using key. Only one of offset or
+                      key should
+
+                      be set.
+                  limit:
+                    type: string
+                    format: uint64
+                    description: >-
+                      limit is the total number of results to be returned in the
+                      result page.
+
+                      If left empty it will default to a value to be set by each
+                      app.
+                  count_total:
+                    type: boolean
+                    description: >-
+                      count_total is set to true  to indicate that the result
+                      set should include
+
+                      a count of the total number of items available for
+                      pagination in UIs.
+
+                      count_total is only respected when offset is used. It is
+                      ignored when key
+
+                      is set.
+                  reverse:
+                    type: boolean
+                    description: >-
+                      reverse is set to true if results are to be returned in
+                      the descending order.
+
+
+                      Since: cosmos-sdk 0.43
+                title: >-
+                  PageRequest is to be embedded in gRPC request messages for
+                  efficient
+
+                  pagination. Ex:
+            description: >-
+              QueryResolversByURLRequest is the Query/ResolversByURL request
+              type.
+      tags:
+        - Query
+  /regen/data/v1/resolvers/{id}:
+    get:
+      summary: Resolver queries a resolver by its unique identifier.
+      operationId: Resolver2
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              resolver:
+                description: resolver is information about the resolver.
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uint64
+                    description: id is the ID of the resolver.
+                  url:
+                    type: string
+                    description: url is the URL of the resolver.
+                  manager:
+                    type: string
+                    description: >-
+                      manager is the address of the account that manages the
+                      resolver.
+            description: QueryResolverResponse is the Query/Resolver response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: id
+          description: id is the ID of the resolver.
+          in: path
+          required: true
+          type: string
+          format: uint64
+      tags:
+        - Query

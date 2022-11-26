@@ -104,15 +104,16 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v5/modules/core/keeper"
 
+	"github.com/regen-network/regen-ledger/x/data"
+	datamodule "github.com/regen-network/regen-ledger/x/data/module"
+	datakeeper "github.com/regen-network/regen-ledger/x/data/server"
+
 	"github.com/choraio/mods/intertx"
 	intertxkeeper "github.com/choraio/mods/intertx/keeper"
 	intertxmodule "github.com/choraio/mods/intertx/module"
 
-	"github.com/regen-network/regen-ledger/x/data"
-	datamodule "github.com/regen-network/regen-ledger/x/data/module"
-	datakeeper "github.com/regen-network/regen-ledger/x/data/server"
 	// unnamed import of statik for swagger UI support
-	// _ "github.com/choraio/chora/app/docs/statik"
+	_ "github.com/choraio/chora/app/client/docs/statik"
 )
 
 const (
@@ -203,7 +204,7 @@ var (
 	}
 
 	// software upgrades
-	upgrades = []Upgrade{testnet1}
+	upgrades = []Upgrade{}
 )
 
 // App extends an ABCI application, but with most of its parameters exported.

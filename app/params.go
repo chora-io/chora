@@ -41,8 +41,5 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibcfeetypes.ModuleName)
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 
-	// regen modules
-	// paramsKeeper.Subspace(ecocredit.DefaultParamspace)
-
 	return paramsKeeper
 }

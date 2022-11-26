@@ -12,3 +12,6 @@ coverage.txt
 
 # localnet home
 chora
+
+# swagger ui
+swagger-ui
