@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/regen-network/regen-ledger/x/data/v2"
 	"github.com/spf13/cast"
 	dbm "github.com/tendermint/tm-db"
 
@@ -104,13 +105,11 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v5/modules/core/keeper"
 
-	"github.com/regen-network/regen-ledger/x/data"
-	datamodule "github.com/regen-network/regen-ledger/x/data/module"
-	datakeeper "github.com/regen-network/regen-ledger/x/data/server"
-
-	"github.com/choraio/mods/intertx"
-	intertxkeeper "github.com/choraio/mods/intertx/keeper"
-	intertxmodule "github.com/choraio/mods/intertx/module"
+	datamodule "github.com/regen-network/regen-ledger/x/data/v2/module"
+	datakeeper "github.com/regen-network/regen-ledger/x/data/v2/server"
+	"github.com/regen-network/regen-ledger/x/intertx"
+	intertxkeeper "github.com/regen-network/regen-ledger/x/intertx/keeper"
+	intertxmodule "github.com/regen-network/regen-ledger/x/intertx/module"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/choraio/chora/app/client/docs/statik"
@@ -181,11 +180,9 @@ var (
 		ibctransfer.AppModuleBasic{},
 		ica.AppModuleBasic{},
 
-		// chora modules
-		intertxmodule.AppModule{},
-
 		// regen modules
 		datamodule.Module{},
+		intertxmodule.AppModule{},
 	)
 
 	// module account permissions
@@ -248,11 +245,9 @@ type App struct {
 	ICAControllerKeeper icacontrollerkeeper.Keeper
 	ICAHostKeeper       icahostkeeper.Keeper
 
-	// keepers (chora modules)
-	InterTxKeeper intertxkeeper.Keeper
-
 	// keepers (regen modules)
-	DataKeeper datakeeper.Keeper
+	DataKeeper    datakeeper.Keeper
+	InterTxKeeper intertxkeeper.Keeper
 
 	// scoped keepers (ibc modules)
 	ScopedIBCKeeper           capabilitykeeper.ScopedKeeper
@@ -260,7 +255,7 @@ type App struct {
 	ScopedICAHostKeeper       capabilitykeeper.ScopedKeeper
 	ScopedICAControllerKeeper capabilitykeeper.ScopedKeeper
 
-	// scoped keepers (chora modules)
+	// scoped keepers (regen modules)
 	ScopedInterTxKeeper capabilitykeeper.ScopedKeeper
 
 	// the module manager
@@ -315,11 +310,9 @@ func NewApp(
 		icahosttypes.StoreKey,
 		icacontrollertypes.StoreKey,
 
-		// chora modules
-		intertx.ModuleName,
-
 		// regen modules
 		data.ModuleName,
+		intertx.ModuleName,
 	)
 
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -362,7 +355,7 @@ func NewApp(
 	app.ScopedICAControllerKeeper = app.CapabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
 	app.ScopedICAHostKeeper = app.CapabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
 
-	// grant capabilities for chora modules
+	// grant capabilities for regen modules
 	app.ScopedInterTxKeeper = app.CapabilityKeeper.ScopeToModule(intertx.ModuleName)
 
 	// enforce statically created ScopedKeepers
@@ -533,18 +526,21 @@ func NewApp(
 		govtypes.DefaultConfig(),
 	)
 
-	// add keepers (chora modules)
-	app.InterTxKeeper = intertxkeeper.NewKeeper(
-		appCodec,
-		app.ICAControllerKeeper,
-		app.ScopedInterTxKeeper,
-	)
-
 	// add keepers (regen modules)
+	dataConfig := data.Config{
+		IRIPrefix: Name,
+	}
 	app.DataKeeper = datakeeper.NewServer(
 		app.keys[data.ModuleName],
 		app.AccountKeeper,
 		app.BankKeeper,
+		dataConfig,
+	)
+
+	app.InterTxKeeper = intertxkeeper.NewKeeper(
+		appCodec,
+		app.ICAControllerKeeper,
+		app.ScopedInterTxKeeper,
 	)
 
 	interTxIBCModule := intertxmodule.NewIBCModule(app.InterTxKeeper)
@@ -599,11 +595,9 @@ func NewApp(
 		ica.NewAppModule(&app.ICAControllerKeeper, &app.ICAHostKeeper),
 		ibcfee.NewAppModule(app.IBCFeeKeeper),
 
-		// chora modules
-		intertxmodule.NewModule(app.InterTxKeeper),
-
 		// regen modules
-		datamodule.NewModule(app.keys[data.ModuleName], app.AccountKeeper, app.BankKeeper),
+		datamodule.NewModule(app.keys[data.ModuleName], app.AccountKeeper, app.BankKeeper, dataConfig),
+		intertxmodule.NewModule(app.InterTxKeeper),
 	)
 
 	// NOTE: distr module must come before staking module
@@ -633,11 +627,9 @@ func NewApp(
 		icatypes.ModuleName,
 		ibcfeetypes.ModuleName,
 
-		// chora modules
-		intertx.ModuleName,
-
 		// regen modules
 		data.ModuleName,
+		intertx.ModuleName,
 	)
 
 	// NOTE: capability module must come before any modules using capabilities (e.g. IBC)
@@ -666,11 +658,9 @@ func NewApp(
 		icatypes.ModuleName,
 		ibcfeetypes.ModuleName,
 
-		// chora modules
-		intertx.ModuleName,
-
 		// regen modules
 		data.ModuleName,
+		intertx.ModuleName,
 	)
 
 	// NOTE: staking module must come before genutils module
@@ -700,11 +690,9 @@ func NewApp(
 		icatypes.ModuleName,
 		ibcfeetypes.ModuleName,
 
-		// chora modules
-		intertx.ModuleName,
-
 		// regen modules
 		data.ModuleName,
+		intertx.ModuleName,
 	)
 
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())

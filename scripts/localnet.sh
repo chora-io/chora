@@ -2,16 +2,24 @@
 
 set -e
 
+# default home
 home=./chora
-chain=chora
+
+# default chain id
+chain_id=chora-local
+
+# default mnemonic (never to be used in production or on a live network)
+mnemonic="cool trust waste core unusual report duck amazing fault juice wish century across ghost cigar diary correct draw glimpse face crush rapid quit equip"
 
 # set script input options
-while getopts ":h:" option; do
+while getopts ":h:c:m:" option; do
   case $option in
     h)
       home=$OPTARG;;
     c)
-      chain=$OPTARG;;
+      chain_id=$OPTARG;;
+    m)
+      mnemonic=$OPTARG;;
     \?)
       echo "Error: invalid option"
       exit 1
@@ -33,23 +41,24 @@ fi
 
 make build
 
-./build/chora config chain-id "$chain"
+./build/chora config chain-id "$chain_id"
 
 ./build/chora config keyring-backend test
 
-./build/chora keys add test --home "$home" --keyring-backend test
+# TODO: keyring-backed config option does not work with add-genesis command
+echo "$mnemonic" | ./build/chora keys add test --home "$home" --keyring-backend test --recover
 
 # TODO: chain-id flag does not work with init command
-./build/chora init test --home "$home" --chain-id "$chain"
+./build/chora init test --home "$home" --chain-id "$chain_id"
 
-# TODO: keyring-backed flag does not work with add-genesis command
-./build/chora add-genesis-account test 5000000000stake --keyring-backend test --home "$home"
+# TODO: keyring-backed config option does not work with add-genesis command
+./build/chora add-genesis-account test 5000000000stake --home "$home" --keyring-backend test
 
-# TODO: keyring-backed and chain-id flags do not work with gentx command
-./build/chora gentx test 1000000stake --keyring-backend test --chain-id "$chain" --home "$home"
+# TODO: keyring-backed and chain-id config options do not work with gentx command
+./build/chora gentx test 1000000stake --keyring-backend test --home "$home" --chain-id "$chain_id"
 
 ./build/chora collect-gentxs --home "$home"
 
 cat <<< $(jq '.app_state.gov.voting_params.voting_period = "20s"' "$home"/config/genesis.json) > "$home/config/genesis.json"
 
-./build/chora start --minimum-gas-prices 0stake --home "$home"
+./build/chora start --api.enable true --api.swagger true --api.enabled-unsafe-cors --minimum-gas-prices 0stake --home "$home"
