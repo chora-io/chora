@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-set -e
+set -eo pipefail
 
 # default home
-home=./chora
+home=./localnet
 
 # default chain id
 chain_id=chora-local

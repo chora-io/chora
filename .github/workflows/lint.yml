@@ -1,0 +1,49 @@
+name: Lint
+
+# **What it does**: Runs go linter when go files have been modified
+# and proto linters when proto files have been modified.
+#
+# **Why we have it**: Ensures all go files and proto files are
+# properly formatted according to lint configuration files.
+#
+# **What does it impact**: Code quality.
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  golangci:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read  # for technote-space/get-diff-action to get git reference
+    strategy:
+      matrix:
+        module: ["app"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: technote-space/get-diff-action@v6
+        id: git-diff-app
+        with:
+          PATTERNS: |
+            app/**/**.go
+            go.mod
+            go.sum
+        if: matrix.module == 'app'
+      - uses: actions/setup-go@v3
+        with:
+          go-version-file: 'go.mod'
+        if: env.GIT_DIFF
+      - uses: golangci/golangci-lint-action@v3
+        with:
+          working-directory: "."
+        if: steps.git-diff-app.outputs.diff
