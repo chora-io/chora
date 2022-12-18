@@ -5,7 +5,6 @@ import (
 	"io"
 	"os"
 
-	"github.com/regen-network/regen-ledger/x/data/v2"
 	"github.com/spf13/cast"
 	dbm "github.com/tendermint/tm-db"
 
@@ -105,11 +104,14 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v5/modules/core/keeper"
 
+	"github.com/regen-network/regen-ledger/x/data/v2"
 	datamodule "github.com/regen-network/regen-ledger/x/data/v2/module"
-	datakeeper "github.com/regen-network/regen-ledger/x/data/v2/server"
 	"github.com/regen-network/regen-ledger/x/intertx"
 	intertxkeeper "github.com/regen-network/regen-ledger/x/intertx/keeper"
 	intertxmodule "github.com/regen-network/regen-ledger/x/intertx/module"
+
+	"github.com/choraio/mods/example"
+	examplemodule "github.com/choraio/mods/example/module"
 
 	// unnamed import for swagger support
 	_ "github.com/choraio/chora/docs/statik"
@@ -183,6 +185,9 @@ var (
 		// regen modules
 		datamodule.Module{},
 		intertxmodule.AppModule{},
+
+		// chora modules
+		examplemodule.Module{},
 	)
 
 	// module account permissions
@@ -246,7 +251,6 @@ type App struct {
 	ICAHostKeeper       icahostkeeper.Keeper
 
 	// keepers (regen modules)
-	DataKeeper    datakeeper.Keeper
 	InterTxKeeper intertxkeeper.Keeper
 
 	// scoped keepers (ibc modules)
@@ -313,6 +317,9 @@ func NewApp(
 		// regen modules
 		data.ModuleName,
 		intertx.ModuleName,
+
+		// chora modules
+		example.ModuleName,
 	)
 
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -527,16 +534,6 @@ func NewApp(
 	)
 
 	// add keepers (regen modules)
-	dataConfig := data.Config{
-		IRIPrefix: Name,
-	}
-	app.DataKeeper = datakeeper.NewServer(
-		app.keys[data.ModuleName],
-		app.AccountKeeper,
-		app.BankKeeper,
-		dataConfig,
-	)
-
 	app.InterTxKeeper = intertxkeeper.NewKeeper(
 		appCodec,
 		app.ICAControllerKeeper,
@@ -555,8 +552,8 @@ func NewApp(
 	ibcRouter.
 		AddRoute(ibctransfertypes.ModuleName, ibcTransferModule).
 		AddRoute(icacontrollertypes.SubModuleName, icaControllerStack).
-		AddRoute(icahosttypes.SubModuleName, icaHostStack)
-	//AddRoute(intertx.ModuleName, icaControllerStack)
+		AddRoute(icahosttypes.SubModuleName, icaHostStack).
+		AddRoute(intertx.ModuleName, icaControllerStack)
 	app.IBCKeeper.SetRouter(ibcRouter)
 
 	// NOTE: we may consider parsing `appOpts` inside module constructors. For the moment
@@ -596,8 +593,13 @@ func NewApp(
 		ibcfee.NewAppModule(app.IBCFeeKeeper),
 
 		// regen modules
-		datamodule.NewModule(app.keys[data.ModuleName], app.AccountKeeper, app.BankKeeper, dataConfig),
+		datamodule.NewModule(app.keys[data.ModuleName], app.AccountKeeper, app.BankKeeper, data.Config{
+			IRIPrefix: Name,
+		}),
 		intertxmodule.NewModule(app.InterTxKeeper),
+
+		// chora modules
+		examplemodule.NewModule(app.keys[example.ModuleName]),
 	)
 
 	// NOTE: distr module must come before staking module
@@ -630,6 +632,9 @@ func NewApp(
 		// regen modules
 		data.ModuleName,
 		intertx.ModuleName,
+
+		// chora modules
+		example.ModuleName,
 	)
 
 	// NOTE: capability module must come before any modules using capabilities (e.g. IBC)
@@ -661,6 +666,9 @@ func NewApp(
 		// regen modules
 		data.ModuleName,
 		intertx.ModuleName,
+
+		// chora modules
+		example.ModuleName,
 	)
 
 	// NOTE: staking module must come before genutils module
@@ -693,6 +701,9 @@ func NewApp(
 		// regen modules
 		data.ModuleName,
 		intertx.ModuleName,
+
+		// chora modules
+		example.ModuleName,
 	)
 
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())

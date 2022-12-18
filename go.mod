@@ -3,6 +3,7 @@ module github.com/choraio/chora
 go 1.19
 
 require (
+	github.com/choraio/mods/example v0.0.0
 	github.com/cosmos/cosmos-sdk v0.46.7
 	github.com/cosmos/ibc-go/v5 v5.1.0
 	github.com/gorilla/mux v1.8.0
@@ -186,3 +187,6 @@ replace github.com/regen-network/regen-ledger/x/data/v2 => github.com/regen-netw
 
 // NOTE: use same version as custom version with configurable data module
 replace github.com/regen-network/regen-ledger/x/intertx => github.com/regen-network/regen-ledger/x/intertx v0.0.0-20221216204149-fcf6a0740861
+
+// NOTE: use latest commit from chora mods
+replace github.com/choraio/mods/example => github.com/choraio/mods/example v0.0.0-20221218183321-24cbe495e3b3
