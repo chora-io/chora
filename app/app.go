@@ -111,8 +111,8 @@ import (
 	intertxkeeper "github.com/regen-network/regen-ledger/x/intertx/keeper"
 	intertxmodule "github.com/regen-network/regen-ledger/x/intertx/module"
 
-	// unnamed import of statik for swagger UI support
-	_ "github.com/choraio/chora/app/client/docs/statik"
+	// unnamed import for swagger support
+	_ "github.com/choraio/chora/docs/statik"
 )
 
 const (

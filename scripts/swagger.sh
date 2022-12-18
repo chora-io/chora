@@ -2,12 +2,12 @@
 
 set -eo pipefail
 
-SWAGGER_DIR=./app/client/docs
+SWAGGER_DIR=./docs
 SWAGGER_UI_DIR=${SWAGGER_DIR}/swagger-ui
 
 SDK_VERSION=$(go list -m -f '{{ .Version }}' github.com/cosmos/cosmos-sdk)
 IBC_VERSION=$(go list -m -f '{{ .Version }}' github.com/cosmos/ibc-go/v5)
-#REGEN_VERSION=$(go list -m -f '{{ .Version }}' github.com/regen-network/regen-ledger/v4)
+#REGEN_VERSION=$(go list -m -f '{{ .Version }}' github.com/regen-network/regen-ledger/v5)
 
 SDK_RAW_URL=https://raw.githubusercontent.com/cosmos/cosmos-sdk/${SDK_VERSION}/client/docs/swagger-ui/swagger.yaml
 IBC_RAW_URL=https://raw.githubusercontent.com/cosmos/ibc-go/${IBC_VERSION}/docs/client/swagger-ui/swagger.yaml
@@ -18,8 +18,6 @@ SWAGGER_UI_DOWNLOAD_URL=https://github.com/swagger-api/swagger-ui/archive/refs/t
 SWAGGER_UI_PACKAGE_NAME=${SWAGGER_DIR}/swagger-ui-${SWAGGER_UI_VERSION}
 
 set -eo pipefail
-
-SWAGGER_DIR=./app/client/docs
 
 # install swagger-combine if not already installed
 npm list -g | grep swagger-combine > /dev/null || npm install -g swagger-combine --no-shrinkwrap
