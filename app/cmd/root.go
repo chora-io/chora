@@ -11,6 +11,7 @@ import (
 	dbm "github.com/tendermint/tm-db"
 
 	tmcfg "github.com/tendermint/tendermint/config"
+	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -50,7 +51,10 @@ func NewRootCmd() (*cobra.Command, app.EncodingConfig) {
 		WithAccountRetriever(types.AccountRetriever{}).
 		WithBroadcastMode(flags.BroadcastBlock).
 		WithHomeDir(app.DefaultNodeHome).
-		WithViper("")
+		WithViper(app.EnvPrefix)
+
+	regenHome := cast.ToString(initClientCtx.Viper.Get(tmcli.HomeFlag))
+	initClientCtx = initClientCtx.WithHomeDir(regenHome)
 
 	rootCmd := &cobra.Command{
 		Use:   app.Name,
