@@ -3,15 +3,15 @@ package main
 import (
 	"os"
 
-	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
+	sdkcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 
 	"github.com/choraio/chora/app"
-	"github.com/choraio/chora/app/client/cmd"
+	"github.com/choraio/chora/app/cmd"
 )
 
 func main() {
 	rootCmd, _ := cmd.NewRootCmd()
-	if err := svrcmd.Execute(rootCmd, app.EnvPrefix, app.DefaultNodeHome); err != nil {
+	if err := sdkcmd.Execute(rootCmd, app.EnvPrefix, app.DefaultNodeHome); err != nil {
 		os.Exit(1)
 	}
 }
