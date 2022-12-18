@@ -1,17 +1,17 @@
+# goland project
 .idea
-.DS_Store
 
-# build artifacts
-build
-
-# output of coverage
+# coverage output
 *.out
 
 # coverage report
 coverage.txt
 
+# build artifacts
+build
+
 # localnet home
-chora
+localnet
 
 # swagger ui
 swagger-ui
