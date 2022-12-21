@@ -108,31 +108,6 @@ start:
 .PHONY: start
 
 ###############################################################################
-###                               Go Version                                ###
-###############################################################################
-
-GO_MAJOR_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f1)
-GO_MINOR_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f2)
-MIN_GO_MAJOR_VERSION = 1
-MIN_GO_MINOR_VERSION = 19
-GO_VERSION_ERROR = Golang version $(GO_MAJOR_VERSION).$(GO_MINOR_VERSION) is not supported, \
-please update to at least $(MIN_GO_MAJOR_VERSION).$(MIN_GO_MINOR_VERSION)
-
-go-version:
-	@echo "Verifying go version..."
-	@if [ $(GO_MAJOR_VERSION) -gt $(MIN_GO_MAJOR_VERSION) ]; then \
-		exit 0; \
-	elif [ $(GO_MAJOR_VERSION) -lt $(MIN_GO_MAJOR_VERSION) ]; then \
-		echo $(GO_VERSION_ERROR); \
-		exit 1; \
-	elif [ $(GO_MINOR_VERSION) -lt $(MIN_GO_MINOR_VERSION) ]; then \
-		echo $(GO_VERSION_ERROR); \
-		exit 1; \
-	fi
-
-.PHONY: go-version
-
-###############################################################################
 ###                               Go Modules                                ###
 ###############################################################################
 
@@ -180,6 +155,31 @@ format:
 .PHONY: lint lint-fix format
 
 ###############################################################################
+###                               Go Version                                ###
+###############################################################################
+
+GO_MAJOR_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f1)
+GO_MINOR_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f2)
+MIN_GO_MAJOR_VERSION = 1
+MIN_GO_MINOR_VERSION = 19
+GO_VERSION_ERROR = Golang version $(GO_MAJOR_VERSION).$(GO_MINOR_VERSION) is not supported, \
+please update to at least $(MIN_GO_MAJOR_VERSION).$(MIN_GO_MINOR_VERSION)
+
+go-version:
+	@echo "Verifying go version..."
+	@if [ $(GO_MAJOR_VERSION) -gt $(MIN_GO_MAJOR_VERSION) ]; then \
+		exit 0; \
+	elif [ $(GO_MAJOR_VERSION) -lt $(MIN_GO_MAJOR_VERSION) ]; then \
+		echo $(GO_VERSION_ERROR); \
+		exit 1; \
+	elif [ $(GO_MINOR_VERSION) -lt $(MIN_GO_MINOR_VERSION) ]; then \
+		echo $(GO_VERSION_ERROR); \
+		exit 1; \
+	fi
+
+.PHONY: go-version
+
+###############################################################################
 ###                                  Tools                                  ###
 ###############################################################################
 
@@ -225,20 +225,11 @@ test-clean:
 ###                              Documentation                              ###
 ###############################################################################
 
-godocs:
+docs:
 	@echo "Wait a few seconds and then visit http://localhost:6060/pkg/github.com/choraio/chora/"
 	godoc -http=:6060
 
-.PHONY: godocs
-
-###############################################################################
-###                                Localnet                                 ###
-###############################################################################
-
-localnet:
-	@./scripts/localnet.sh
-
-.PHONY: localnet
+.PHONY: docs
 
 ###############################################################################
 ###                                 Swagger                                 ###
