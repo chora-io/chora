@@ -468,16 +468,6 @@ func NewApp(
 		app.UpgradeKeeper,
 		app.ScopedIBCKeeper,
 	)
-	app.IBCTransferKeeper = ibctransferkeeper.NewKeeper(
-		appCodec, keys[ibctransfertypes.StoreKey],
-		app.GetSubspace(ibctransfertypes.ModuleName),
-		app.IBCKeeper.ChannelKeeper,
-		app.IBCKeeper.ChannelKeeper,
-		&app.IBCKeeper.PortKeeper,
-		app.AccountKeeper,
-		app.BankKeeper,
-		app.ScopedIBCTransferKeeper,
-	)
 	app.IBCFeeKeeper = ibcfeekeeper.NewKeeper(
 		app.appCodec, app.keys[ibcfeetypes.StoreKey],
 		app.GetSubspace(ibcfeetypes.ModuleName),
@@ -487,10 +477,20 @@ func NewApp(
 		app.AccountKeeper,
 		app.BankKeeper,
 	)
+	app.IBCTransferKeeper = ibctransferkeeper.NewKeeper(
+		appCodec, keys[ibctransfertypes.StoreKey],
+		app.GetSubspace(ibctransfertypes.ModuleName),
+		app.IBCFeeKeeper, // added to support IBC fee middleware
+		app.IBCKeeper.ChannelKeeper,
+		&app.IBCKeeper.PortKeeper,
+		app.AccountKeeper,
+		app.BankKeeper,
+		app.ScopedIBCTransferKeeper,
+	)
 	app.ICAControllerKeeper = icacontrollerkeeper.NewKeeper(
 		appCodec, keys[icacontrollertypes.StoreKey],
 		app.GetSubspace(icacontrollertypes.SubModuleName),
-		app.IBCFeeKeeper,
+		app.IBCFeeKeeper, // added to support IBC fee middleware
 		app.IBCKeeper.ChannelKeeper,
 		&app.IBCKeeper.PortKeeper,
 		app.ScopedICAControllerKeeper,
@@ -500,7 +500,7 @@ func NewApp(
 		appCodec,
 		app.keys[icahosttypes.StoreKey],
 		app.GetSubspace(icahosttypes.SubModuleName),
-		app.IBCFeeKeeper,
+		app.IBCFeeKeeper, // added to support IBC fee middleware
 		app.IBCKeeper.ChannelKeeper,
 		&app.IBCKeeper.PortKeeper,
 		app.AccountKeeper,
@@ -540,17 +540,22 @@ func NewApp(
 		app.ScopedInterTxKeeper,
 	)
 
-	interTxIBCModule := intertxmodule.NewIBCModule(app.InterTxKeeper)
+	// Create IBC stacks to add to IBC router
 	ibcTransferModule := ibctransfer.NewIBCModule(app.IBCTransferKeeper)
+	ibcTransferStack := ibcfee.NewIBCMiddleware(ibcTransferModule, app.IBCFeeKeeper)
+
+	interTxIBCModule := intertxmodule.NewIBCModule(app.InterTxKeeper)
+
 	icaControllerIBCModule := icacontroller.NewIBCMiddleware(interTxIBCModule, app.ICAControllerKeeper)
 	icaControllerStack := ibcfee.NewIBCMiddleware(icaControllerIBCModule, app.IBCFeeKeeper)
+
 	icaHostIBCModule := icahost.NewIBCModule(app.ICAHostKeeper)
 	icaHostStack := ibcfee.NewIBCMiddleware(icaHostIBCModule, app.IBCFeeKeeper)
 
 	// register IBC router
 	ibcRouter := porttypes.NewRouter()
 	ibcRouter.
-		AddRoute(ibctransfertypes.ModuleName, ibcTransferModule).
+		AddRoute(ibctransfertypes.ModuleName, ibcTransferStack).
 		AddRoute(icacontrollertypes.SubModuleName, icaControllerStack).
 		AddRoute(icahosttypes.SubModuleName, icaHostStack).
 		AddRoute(intertx.ModuleName, icaControllerStack)
