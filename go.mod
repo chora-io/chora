@@ -5,13 +5,14 @@ go 1.19
 require (
 	github.com/choraio/mods/example v0.0.0
 	github.com/cosmos/cosmos-sdk v0.46.7
-	github.com/cosmos/ibc-go/v5 v5.1.0
+	github.com/cosmos/ibc-go/v5 v5.2.0
 	github.com/gorilla/mux v1.8.0
 	github.com/rakyll/statik v0.1.7
 	github.com/regen-network/regen-ledger/x/data/v2 v2.0.0
-	github.com/regen-network/regen-ledger/x/intertx v0.0.0
+	github.com/regen-network/regen-ledger/x/intertx v0.0.0-20221221161107-55084f775499
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/cobra v1.6.1
+	github.com/stretchr/testify v1.8.1
 	github.com/tendermint/tendermint v0.34.24
 	github.com/tendermint/tm-db v0.6.7
 )
@@ -29,7 +30,7 @@ require (
 	github.com/99designs/keyring v1.2.1 // indirect
 	github.com/ChainSafe/go-schnorrkel v0.0.0-20200405005733-88cbf1b4c40d // indirect
 	github.com/Workiva/go-datastructures v1.0.53 // indirect
-	github.com/armon/go-metrics v0.4.0 // indirect
+	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/aws/aws-sdk-go v1.40.45 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bgentry/go-netrc v0.0.0-20140422174119-9fd32a8b3d3d // indirect
@@ -133,7 +134,6 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.14.0 // indirect
-	github.com/stretchr/testify v1.8.1 // indirect
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7 // indirect
 	github.com/tendermint/btcd v0.1.1 // indirect
@@ -176,17 +176,17 @@ replace github.com/confio/ics23/go => github.com/cosmos/cosmos-sdk/ics23/go v0.8
 // NOTE: use same version of cosmos-sdk as regen-ledger v5.0.0
 replace github.com/cosmos/cosmos-sdk => github.com/regen-network/cosmos-sdk v0.46.7-regen-1
 
-// NOTE: use same version as custom version with configurable data module
-replace github.com/regen-network/regen-ledger/api/v2 => github.com/regen-network/regen-ledger/api/v2 v2.0.0-20221216204149-fcf6a0740861
+// NOTE: use custom version based on latest release branch
+replace github.com/regen-network/regen-ledger/api/v2 => github.com/regen-network/regen-ledger/api/v2 v2.0.0-20221221161107-55084f775499
 
-// NOTE: use same version as custom version with configurable data module
-replace github.com/regen-network/regen-ledger/types/v2 => github.com/regen-network/regen-ledger/types/v2 v2.0.0-20221216204149-fcf6a0740861
+// NOTE: use custom version based on latest release branch
+replace github.com/regen-network/regen-ledger/types/v2 => github.com/regen-network/regen-ledger/types/v2 v2.0.0-20221221161107-55084f775499
 
 // NOTE: use custom version with configurable data module
 replace github.com/regen-network/regen-ledger/x/data/v2 => github.com/regen-network/regen-ledger/x/data/v2 v2.0.0-20221216204149-fcf6a0740861
 
-// NOTE: use same version as custom version with configurable data module
-replace github.com/regen-network/regen-ledger/x/intertx => github.com/regen-network/regen-ledger/x/intertx v0.0.0-20221216204149-fcf6a0740861
+// NOTE: use custom version based on latest release branch
+replace github.com/regen-network/regen-ledger/x/intertx => github.com/regen-network/regen-ledger/x/intertx v0.0.0-20221221161107-55084f775499
 
 // NOTE: use latest commit from chora mods
 replace github.com/choraio/mods/example => github.com/choraio/mods/example v0.0.0-20221218183321-24cbe495e3b3
