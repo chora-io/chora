@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/regen-network/regen-ledger/x/data/v2"
 	"github.com/spf13/cast"
 	dbm "github.com/tendermint/tm-db"
 
@@ -104,14 +105,15 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v5/modules/core/keeper"
 
-	"github.com/regen-network/regen-ledger/x/data/v2"
 	datamodule "github.com/regen-network/regen-ledger/x/data/v2/module"
 	"github.com/regen-network/regen-ledger/x/intertx"
 	intertxkeeper "github.com/regen-network/regen-ledger/x/intertx/keeper"
 	intertxmodule "github.com/regen-network/regen-ledger/x/intertx/module"
 
-	"github.com/choraio/mods/example"
-	examplemodule "github.com/choraio/mods/example/module"
+	"github.com/choraio/mods/content"
+	contentmodule "github.com/choraio/mods/content/module"
+	"github.com/choraio/mods/geonode"
+	geonodemodule "github.com/choraio/mods/geonode/module"
 
 	// unnamed import for swagger support
 	_ "github.com/choraio/chora/docs/statik"
@@ -187,7 +189,8 @@ var (
 		intertxmodule.AppModule{},
 
 		// chora modules
-		examplemodule.Module{},
+		contentmodule.Module{},
+		geonodemodule.Module{},
 	)
 
 	// module account permissions
@@ -319,7 +322,8 @@ func NewApp(
 		intertx.ModuleName,
 
 		// chora modules
-		example.ModuleName,
+		content.ModuleName,
+		geonode.ModuleName,
 	)
 
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -604,7 +608,8 @@ func NewApp(
 		intertxmodule.NewModule(app.InterTxKeeper),
 
 		// chora modules
-		examplemodule.NewModule(app.keys[example.ModuleName]),
+		contentmodule.NewModule(app.keys[content.ModuleName]),
+		geonodemodule.NewModule(app.keys[geonode.ModuleName]),
 	)
 
 	// NOTE: distr module must come before staking module
@@ -639,7 +644,8 @@ func NewApp(
 		intertx.ModuleName,
 
 		// chora modules
-		example.ModuleName,
+		content.ModuleName,
+		geonode.ModuleName,
 	)
 
 	// NOTE: capability module must come before any modules using capabilities (e.g. IBC)
@@ -673,7 +679,8 @@ func NewApp(
 		intertx.ModuleName,
 
 		// chora modules
-		example.ModuleName,
+		content.ModuleName,
+		geonode.ModuleName,
 	)
 
 	// NOTE: staking module must come before genutils module
@@ -708,7 +715,8 @@ func NewApp(
 		intertx.ModuleName,
 
 		// chora modules
-		example.ModuleName,
+		content.ModuleName,
+		geonode.ModuleName,
 	)
 
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())

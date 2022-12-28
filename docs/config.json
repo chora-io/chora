@@ -33,6 +33,18 @@
       "dereference": {
         "circular": "ignore"
       }
+    },
+    {
+      "url": "./docs/swagger-chora-content.yaml",
+      "dereference": {
+        "circular": "ignore"
+      }
+    },
+    {
+      "url": "./docs/swagger-chora-geonode.yaml",
+      "dereference": {
+        "circular": "ignore"
+      }
     }
   ]
 }

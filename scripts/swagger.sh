@@ -8,10 +8,16 @@ SWAGGER_UI_DIR=${SWAGGER_DIR}/swagger-ui
 SDK_VERSION=$(go list -m -f '{{ .Version }}' github.com/cosmos/cosmos-sdk)
 IBC_VERSION=$(go list -m -f '{{ .Version }}' github.com/cosmos/ibc-go/v5)
 #REGEN_VERSION=$(go list -m -f '{{ .Version }}' github.com/regen-network/regen-ledger/v5)
+#CHORA_CONTENT_VERSION=$(go list -m -f '{{ .Version }}' github.com/choraio/mods/content)
+#CHORA_GEONODE_VERSION=$(go list -m -f '{{ .Version }}' github.com/choraio/mods/geonode)
+CHORA_CONTENT_VERSION=7fcd6b24fd9c9de3bfc7a6acc15413386c504c86
+CHORA_GEONODE_VERSION=7fcd6b24fd9c9de3bfc7a6acc15413386c504c86
 
 SDK_RAW_URL=https://raw.githubusercontent.com/cosmos/cosmos-sdk/${SDK_VERSION}/client/docs/swagger-ui/swagger.yaml
 IBC_RAW_URL=https://raw.githubusercontent.com/cosmos/ibc-go/${IBC_VERSION}/docs/client/swagger-ui/swagger.yaml
 #REGEN_RAW_URL=https://raw.githubusercontent.com/cosmos/cosmos-sdk/${REGEN_VERSION}/app/client/docs/swagger-ui/swagger.yaml
+CHORA_CONTENT_RAW_URL=https://raw.githubusercontent.com/choraio/mods/${CHORA_CONTENT_VERSION}/content/docs/swagger.yaml
+CHORA_GEONODE_RAW_URL=https://raw.githubusercontent.com/choraio/mods/${CHORA_GEONODE_VERSION}/geonode/docs/swagger.yaml
 
 SWAGGER_UI_VERSION=4.11.0
 SWAGGER_UI_DOWNLOAD_URL=https://github.com/swagger-api/swagger-ui/archive/refs/tags/v${SWAGGER_UI_VERSION}.zip
@@ -36,6 +42,14 @@ curl -o ${SWAGGER_DIR}/swagger-ibc.yaml -sfL "${IBC_RAW_URL}"
 # download Regen Ledger swagger yaml file
 #echo "Regen version ${REGEN_VERSION}"
 #curl -o ${SWAGGER_DIR}/swagger-regen.yaml -sfL "${REGEN_RAW_URL}"
+
+# download Chora Content swagger yaml file
+echo "Chora Content version ${CHORA_CONTENT_VERSION}"
+curl -o ${SWAGGER_DIR}/swagger-chora-content.yaml -sfL "${CHORA_CONTENT_RAW_URL}"
+
+# download Chora Geonode swagger yaml file
+echo "Chora Geonode version ${CHORA_GEONODE_VERSION}"
+curl -o ${SWAGGER_DIR}/swagger-chora-geonode.yaml -sfL "${CHORA_GEONODE_RAW_URL}"
 
 # combine swagger yaml files using nodejs package `swagger-combine`
 # all the individual swagger files need to be configured in `config.json` for merging

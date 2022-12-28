@@ -50757,6 +50757,380 @@ paths:
           format: uint64
       tags:
         - Query
+  /chora/content/v1/content-by-curator/{curator}:
+    get:
+      summary: ContentByCurator queries all content by the curator of the content.
+      operationId: ContentByCurator
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              curator:
+                type: string
+                description: curator is the address of the content curator.
+              content:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uint64
+                      description: id is the unique identifier of the content.
+                    metadata:
+                      type: string
+                      description: metadata is the metadata of the content.
+                  description: Content is the content properties.
+                description: content is the content created by the curator.
+              pagination:
+                description: pagination is the pagination in the response.
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    description: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently. It will be empty if
+                      there are no more results.
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+            description: >-
+              QueryContentByCuratorResponse is the Query/ContentByCurator
+              response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: curator
+          description: curator is the address of the content curator.
+          in: path
+          required: true
+          type: string
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+
+
+            Since: cosmos-sdk 0.43
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  /chora/content/v1/content/{id}:
+    get:
+      summary: Content queries content by the unique identifier of the content.
+      operationId: Content
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uint64
+                description: id is the unique identifier of the content.
+              curator:
+                type: string
+                description: curator is the curator of the content.
+              metadata:
+                type: string
+                description: metadata is the metadata of the content.
+            description: QueryContentResponse is the Query/Content response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: id
+          description: id is the unique identifier of the content.
+          in: path
+          required: true
+          type: string
+          format: uint64
+      tags:
+        - Query
+  /chora/geonode/v1/node-by-curator/{curator}:
+    get:
+      summary: NodeByCurator queries nodes by the curator of the nodes.
+      operationId: NodeByCurator
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              curator:
+                type: string
+                description: curator is the address of the node curator.
+              nodes:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uint64
+                      description: id is the unique identifier of the node.
+                    metadata:
+                      type: string
+                      description: metadata is the metadata of the node.
+                  description: Node is the node properties.
+                description: node is the node managed by the curator.
+              pagination:
+                description: pagination is the pagination of the response.
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    description: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently. It will be empty if
+                      there are no more results.
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+            description: >-
+              QueryNodeByCuratorResponse is the Query/NodeByCurator response
+              type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: curator
+          description: curator is the address of the node curator.
+          in: path
+          required: true
+          type: string
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+        - name: pagination.reverse
+          description: >-
+            reverse is set to true if results are to be returned in the
+            descending order.
+
+
+            Since: cosmos-sdk 0.43
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  /chora/geonode/v1/node/{id}:
+    get:
+      summary: Node queries a node by the unique identifier of the node.
+      operationId: Node
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uint64
+                description: id is the unique identifier of the node.
+              curator:
+                type: string
+                description: curator is the curator of the node.
+              metadata:
+                type: string
+                description: metadata is the metadata of the node.
+            description: QueryNodeResponse is the Query/Node response type.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type_url:
+                      type: string
+                    value:
+                      type: string
+                      format: byte
+      parameters:
+        - name: id
+          description: id is the unique identifier of the node.
+          in: path
+          required: true
+          type: string
+          format: uint64
+      tags:
+        - Query
 definitions:
   cosmos.auth.v1beta1.AddressBytesToStringResponse:
     type: object
@@ -80269,3 +80643,133 @@ definitions:
       ready to send and receive packets.
        - STATE_CLOSED: A channel has been closed and can no longer be used to send or receive
       packets.
+  chora.content.v1.QueryContentByCuratorResponse:
+    type: object
+    properties:
+      curator:
+        type: string
+        description: curator is the address of the content curator.
+      content:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uint64
+              description: id is the unique identifier of the content.
+            metadata:
+              type: string
+              description: metadata is the metadata of the content.
+          description: Content is the content properties.
+        description: content is the content created by the curator.
+      pagination:
+        description: pagination is the pagination in the response.
+        type: object
+        properties:
+          next_key:
+            type: string
+            format: byte
+            description: |-
+              next_key is the key to be passed to PageRequest.key to
+              query the next page most efficiently. It will be empty if
+              there are no more results.
+          total:
+            type: string
+            format: uint64
+            title: >-
+              total is total number of results available if
+              PageRequest.count_total
+
+              was set, its value is undefined otherwise
+    description: QueryContentByCuratorResponse is the Query/ContentByCurator response type.
+  chora.content.v1.QueryContentByCuratorResponse.Content:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uint64
+        description: id is the unique identifier of the content.
+      metadata:
+        type: string
+        description: metadata is the metadata of the content.
+    description: Content is the content properties.
+  chora.content.v1.QueryContentResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uint64
+        description: id is the unique identifier of the content.
+      curator:
+        type: string
+        description: curator is the curator of the content.
+      metadata:
+        type: string
+        description: metadata is the metadata of the content.
+    description: QueryContentResponse is the Query/Content response type.
+  chora.geonode.v1.QueryNodeByCuratorResponse:
+    type: object
+    properties:
+      curator:
+        type: string
+        description: curator is the address of the node curator.
+      nodes:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uint64
+              description: id is the unique identifier of the node.
+            metadata:
+              type: string
+              description: metadata is the metadata of the node.
+          description: Node is the node properties.
+        description: node is the node managed by the curator.
+      pagination:
+        description: pagination is the pagination of the response.
+        type: object
+        properties:
+          next_key:
+            type: string
+            format: byte
+            description: |-
+              next_key is the key to be passed to PageRequest.key to
+              query the next page most efficiently. It will be empty if
+              there are no more results.
+          total:
+            type: string
+            format: uint64
+            title: >-
+              total is total number of results available if
+              PageRequest.count_total
+
+              was set, its value is undefined otherwise
+    description: QueryNodeByCuratorResponse is the Query/NodeByCurator response type.
+  chora.geonode.v1.QueryNodeByCuratorResponse.Node:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uint64
+        description: id is the unique identifier of the node.
+      metadata:
+        type: string
+        description: metadata is the metadata of the node.
+    description: Node is the node properties.
+  chora.geonode.v1.QueryNodeResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uint64
+        description: id is the unique identifier of the node.
+      curator:
+        type: string
+        description: curator is the curator of the node.
+      metadata:
+        type: string
+        description: metadata is the metadata of the node.
+    description: QueryNodeResponse is the Query/Node response type.

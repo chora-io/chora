@@ -3,13 +3,14 @@ module github.com/choraio/chora
 go 1.19
 
 require (
-	github.com/choraio/mods/example v0.0.0
+	github.com/choraio/mods/content v0.0.0
+	github.com/choraio/mods/geonode v0.0.0
 	github.com/cosmos/cosmos-sdk v0.46.7
 	github.com/cosmos/ibc-go/v5 v5.2.0
 	github.com/gorilla/mux v1.8.0
 	github.com/rakyll/statik v0.1.7
 	github.com/regen-network/regen-ledger/x/data/v2 v2.0.0
-	github.com/regen-network/regen-ledger/x/intertx v0.0.0-20221221161107-55084f775499
+	github.com/regen-network/regen-ledger/x/intertx v1.0.0
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/cobra v1.6.1
 	github.com/stretchr/testify v1.8.1
@@ -189,4 +190,7 @@ replace github.com/regen-network/regen-ledger/x/data/v2 => github.com/regen-netw
 replace github.com/regen-network/regen-ledger/x/intertx => github.com/regen-network/regen-ledger/x/intertx v0.0.0-20221221161107-55084f775499
 
 // NOTE: use latest commit from chora mods
-replace github.com/choraio/mods/example => github.com/choraio/mods/example v0.0.0-20221218183321-24cbe495e3b3
+replace github.com/choraio/mods/content => github.com/choraio/mods/content v0.0.0-20221228005610-7fcd6b24fd9c
+
+// NOTE: use latest commit from chora mods
+replace github.com/choraio/mods/geonode => github.com/choraio/mods/geonode v0.0.0-20221228005610-7fcd6b24fd9c
