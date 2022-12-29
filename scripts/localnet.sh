@@ -3,7 +3,7 @@
 set -eo pipefail
 
 # default home
-home=./localnet
+home=./local
 
 # default chain id
 chain_id=chora-local

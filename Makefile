@@ -3,6 +3,7 @@
 export GO111MODULE=on
 
 BUILD_DIR ?= $(CURDIR)/build
+LOCAL_DIR ?= $(CURDIR)/local
 CHORA_CMD := $(CURDIR)/cmd/chora
 
 BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
@@ -102,10 +103,10 @@ install: go.sum go-version
 ###                                Localnet                                 ###
 ###############################################################################
 
-start:
-	@./scripts/localnet.sh
+local:
+	@./scripts/localnet.sh -h $(LOCAL_DIR)
 
-.PHONY: start
+.PHONY: local
 
 ###############################################################################
 ###                               Go Modules                                ###
@@ -246,5 +247,6 @@ swagger:
 
 clean: test-clean
 	@rm -rf $(BUILD_DIR)
+	@rm -rf $(LOCAL_DIR)
 
 .PHONY: clean
