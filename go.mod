@@ -190,7 +190,7 @@ replace github.com/regen-network/regen-ledger/x/data/v2 => github.com/regen-netw
 replace github.com/regen-network/regen-ledger/x/intertx => github.com/regen-network/regen-ledger/x/intertx v0.0.0-20221221161107-55084f775499
 
 // NOTE: use latest commit from chora mods
-replace github.com/choraio/mods/content => github.com/choraio/mods/content v0.0.0-20221228184000-7d5137ebabdf
+replace github.com/choraio/mods/content => github.com/choraio/mods/content v0.0.0-20221230005705-de6da7909faa
 
 // NOTE: use latest commit from chora mods
-replace github.com/choraio/mods/geonode => github.com/choraio/mods/geonode v0.0.0-20221228184000-7d5137ebabdf
+replace github.com/choraio/mods/geonode => github.com/choraio/mods/geonode v0.0.0-20221230005705-de6da7909faa
