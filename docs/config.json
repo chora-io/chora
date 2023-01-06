@@ -7,6 +7,18 @@
   },
   "apis": [
     {
+      "url": "./docs/swagger-chora-content.yaml",
+      "dereference": {
+        "circular": "ignore"
+      }
+    },
+    {
+      "url": "./docs/swagger-chora-geonode.yaml",
+      "dereference": {
+        "circular": "ignore"
+      }
+    },
+    {
       "url": "./docs/swagger-sdk.yaml",
       "dereference": {
         "circular": "ignore"
@@ -30,18 +42,6 @@
     },
     {
       "url": "./docs/swagger-regen.yaml",
-      "dereference": {
-        "circular": "ignore"
-      }
-    },
-    {
-      "url": "./docs/swagger-chora-content.yaml",
-      "dereference": {
-        "circular": "ignore"
-      }
-    },
-    {
-      "url": "./docs/swagger-chora-geonode.yaml",
       "dereference": {
         "circular": "ignore"
       }
