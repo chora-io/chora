@@ -15,3 +15,9 @@ local
 
 # swagger ui
 swagger-ui
+
+# swagger configs
+swagger-*.yaml
+
+# exclude regen swagger
+!swagger-regen.yaml

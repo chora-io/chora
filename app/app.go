@@ -114,6 +114,8 @@ import (
 	contentmodule "github.com/choraio/mods/content/module"
 	"github.com/choraio/mods/geonode"
 	geonodemodule "github.com/choraio/mods/geonode/module"
+	"github.com/choraio/mods/voucher"
+	vouchermodule "github.com/choraio/mods/voucher/module"
 
 	// unnamed import for swagger support
 	_ "github.com/choraio/chora/docs/statik"
@@ -191,6 +193,7 @@ var (
 		// chora modules
 		contentmodule.Module{},
 		geonodemodule.Module{},
+		vouchermodule.Module{},
 	)
 
 	// module account permissions
@@ -324,6 +327,7 @@ func NewApp(
 		// chora modules
 		content.ModuleName,
 		geonode.ModuleName,
+		voucher.ModuleName,
 	)
 
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -610,6 +614,7 @@ func NewApp(
 		// chora modules
 		contentmodule.NewModule(app.keys[content.ModuleName]),
 		geonodemodule.NewModule(app.keys[geonode.ModuleName]),
+		vouchermodule.NewModule(app.keys[voucher.ModuleName]),
 	)
 
 	// NOTE: distr module must come before staking module
@@ -646,6 +651,7 @@ func NewApp(
 		// chora modules
 		content.ModuleName,
 		geonode.ModuleName,
+		voucher.ModuleName,
 	)
 
 	// NOTE: capability module must come before any modules using capabilities (e.g. IBC)
@@ -681,6 +687,7 @@ func NewApp(
 		// chora modules
 		content.ModuleName,
 		geonode.ModuleName,
+		voucher.ModuleName,
 	)
 
 	// NOTE: staking module must come before genutils module
@@ -717,6 +724,7 @@ func NewApp(
 		// chora modules
 		content.ModuleName,
 		geonode.ModuleName,
+		voucher.ModuleName,
 	)
 
 	app.configurator = module.NewConfigurator(app.appCodec, app.MsgServiceRouter(), app.GRPCQueryRouter())

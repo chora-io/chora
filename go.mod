@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/choraio/mods/content v0.0.0
 	github.com/choraio/mods/geonode v0.0.0
+	github.com/choraio/mods/voucher v0.0.0
 	github.com/cosmos/cosmos-sdk v0.46.7
 	github.com/cosmos/ibc-go/v5 v5.2.0
 	github.com/gorilla/mux v1.8.0
@@ -180,7 +181,10 @@ replace github.com/cosmos/cosmos-sdk => github.com/regen-network/cosmos-sdk v0.4
 replace github.com/regen-network/regen-ledger/x/data/v2 => github.com/regen-network/regen-ledger/x/data/v2 v2.0.0-20221216204149-fcf6a0740861
 
 // NOTE: use latest commit from chora mods
-replace github.com/choraio/mods/content => github.com/choraio/mods/content v0.0.0-20230106215342-65d89bddfe14
+replace github.com/choraio/mods/content => github.com/choraio/mods/content v0.0.0-20230108050413-d1a907e6e185
 
 // NOTE: use latest commit from chora mods
-replace github.com/choraio/mods/geonode => github.com/choraio/mods/geonode v0.0.0-20230106215342-65d89bddfe14
+replace github.com/choraio/mods/geonode => github.com/choraio/mods/geonode v0.0.0-20230108050413-d1a907e6e185
+
+// NOTE: use latest commit from chora mods
+replace github.com/choraio/mods/voucher => github.com/choraio/mods/voucher v0.0.0-20230108050413-d1a907e6e185
