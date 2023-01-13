@@ -27,7 +27,7 @@ jobs:
       pull-requests: read  # for technote-space/get-diff-action to get git reference
     strategy:
       matrix:
-        module: ["app"]
+        module: [app]
     steps:
       - uses: actions/checkout@v3
       - uses: technote-space/get-diff-action@v6
@@ -38,7 +38,7 @@ jobs:
             **/go.sum
       - uses: actions/setup-go@v3
         with:
-          go-version-file: 'go.mod'
+          go-version-file: go.mod
         if: env.GIT_DIFF || github.ref == 'refs/heads/main'
       - run: make test-app
         if: |
