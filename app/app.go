@@ -5,7 +5,6 @@ import (
 	"io"
 	"os"
 
-	"github.com/regen-network/regen-ledger/x/data/v2"
 	"github.com/spf13/cast"
 	dbm "github.com/tendermint/tm-db"
 
@@ -105,6 +104,7 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v5/modules/core/keeper"
 
+	"github.com/regen-network/regen-ledger/x/data/v2"
 	datamodule "github.com/regen-network/regen-ledger/x/data/v2/module"
 	"github.com/regen-network/regen-ledger/x/intertx"
 	intertxkeeper "github.com/regen-network/regen-ledger/x/intertx/keeper"
@@ -735,15 +735,14 @@ func NewApp(
 	app.setUpgradeStoreLoaders()
 	app.setUpgradeHandlers()
 
-	// initialize stores
 	app.MountKVStores(keys)
 	app.MountTransientStores(tkeys)
 	app.MountMemoryStores(memKeys)
 
-	// initialize BaseApp
 	app.SetInitChainer(app.InitChainer)
 	app.SetBeginBlocker(app.BeginBlocker)
 	app.SetEndBlocker(app.EndBlocker)
+
 	anteHandler, err := ante.NewAnteHandler(
 		ante.HandlerOptions{
 			AccountKeeper:   app.AccountKeeper,

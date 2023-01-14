@@ -11,9 +11,9 @@ IBC_VERSION=$(go list -m -f '{{ .Version }}' github.com/cosmos/ibc-go/v5)
 #CHORA_CONTENT_VERSION=$(go list -m -f '{{ .Version }}' github.com/choraio/mods/content)
 #CHORA_GEONODE_VERSION=$(go list -m -f '{{ .Version }}' github.com/choraio/mods/geonode)
 #CHORA_VOUCHER_VERSION=$(go list -m -f '{{ .Version }}' github.com/choraio/mods/geonode)
-CHORA_CONTENT_VERSION=d1a907e6e185fc80545a20ebefcd509b0a328bf2
-CHORA_GEONODE_VERSION=d1a907e6e185fc80545a20ebefcd509b0a328bf2
-CHORA_VOUCHER_VERSION=d1a907e6e185fc80545a20ebefcd509b0a328bf2
+CHORA_CONTENT_VERSION=f817bc85dc14ee100e15983f4d113d6316ab497b
+CHORA_GEONODE_VERSION=f817bc85dc14ee100e15983f4d113d6316ab497b
+CHORA_VOUCHER_VERSION=f817bc85dc14ee100e15983f4d113d6316ab497b
 
 SDK_RAW_URL=https://raw.githubusercontent.com/cosmos/cosmos-sdk/${SDK_VERSION}/client/docs/swagger-ui/swagger.yaml
 IBC_RAW_URL=https://raw.githubusercontent.com/cosmos/ibc-go/${IBC_VERSION}/docs/client/swagger-ui/swagger.yaml
