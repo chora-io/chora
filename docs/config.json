@@ -19,6 +19,17 @@
       }
     },
     {
+      "url": "./docs/swagger-chora-voucher.yaml",
+      "dereference": {
+        "circular": "ignore"
+      },
+      "operationIds": {
+        "rename": {
+          "Balance": "Voucher/Balance",
+        }
+      }
+    },
+    {
       "url": "./docs/swagger-sdk.yaml",
       "dereference": {
         "circular": "ignore"
