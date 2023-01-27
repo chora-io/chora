@@ -19,5 +19,6 @@ swagger-ui
 # swagger configs
 swagger-*.yaml
 
-# exclude regen swagger
+# exclude modified swagger
+!swagger-sdk.yaml
 !swagger-regen.yaml

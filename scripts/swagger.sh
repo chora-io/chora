@@ -5,17 +5,17 @@ set -eo pipefail
 SWAGGER_DIR=./docs
 SWAGGER_UI_DIR=${SWAGGER_DIR}/swagger-ui
 
-SDK_VERSION=$(go list -m -f '{{ .Version }}' github.com/cosmos/cosmos-sdk)
+#SDK_VERSION=$(go list -m -f '{{ .Version }}' github.com/cosmos/cosmos-sdk)
 IBC_VERSION=$(go list -m -f '{{ .Version }}' github.com/cosmos/ibc-go/v5)
 #REGEN_VERSION=$(go list -m -f '{{ .Version }}' github.com/regen-network/regen-ledger/v5)
 #CHORA_CONTENT_VERSION=$(go list -m -f '{{ .Version }}' github.com/choraio/mods/content)
 #CHORA_GEONODE_VERSION=$(go list -m -f '{{ .Version }}' github.com/choraio/mods/geonode)
 #CHORA_VOUCHER_VERSION=$(go list -m -f '{{ .Version }}' github.com/choraio/mods/geonode)
-CHORA_CONTENT_VERSION=f817bc85dc14ee100e15983f4d113d6316ab497b
-CHORA_GEONODE_VERSION=f817bc85dc14ee100e15983f4d113d6316ab497b
-CHORA_VOUCHER_VERSION=f817bc85dc14ee100e15983f4d113d6316ab497b
+CHORA_CONTENT_VERSION=a302a70db0b41f07b69957ce42c72b21d2e829d1
+CHORA_GEONODE_VERSION=a302a70db0b41f07b69957ce42c72b21d2e829d1
+CHORA_VOUCHER_VERSION=a302a70db0b41f07b69957ce42c72b21d2e829d1
 
-SDK_RAW_URL=https://raw.githubusercontent.com/cosmos/cosmos-sdk/${SDK_VERSION}/client/docs/swagger-ui/swagger.yaml
+#SDK_RAW_URL=https://raw.githubusercontent.com/cosmos/cosmos-sdk/${SDK_VERSION}/client/docs/swagger-ui/swagger.yaml
 IBC_RAW_URL=https://raw.githubusercontent.com/cosmos/ibc-go/${IBC_VERSION}/docs/client/swagger-ui/swagger.yaml
 #REGEN_RAW_URL=https://raw.githubusercontent.com/cosmos/cosmos-sdk/${REGEN_VERSION}/app/client/docs/swagger-ui/swagger.yaml
 CHORA_CONTENT_RAW_URL=https://raw.githubusercontent.com/choraio/mods/${CHORA_CONTENT_VERSION}/content/docs/swagger.yaml
@@ -35,8 +35,8 @@ npm list -g | grep swagger-combine > /dev/null || npm install -g swagger-combine
 go install github.com/rakyll/statik@latest
 
 # download Cosmos SDK swagger yaml file
-echo "SDK version ${SDK_VERSION}"
-curl -o ${SWAGGER_DIR}/swagger-sdk.yaml -sfL "${SDK_RAW_URL}"
+#echo "SDK version ${SDK_VERSION}"
+#curl -o ${SWAGGER_DIR}/swagger-sdk.yaml -sfL "${SDK_RAW_URL}"
 
 # download IBC swagger yaml file
 echo "IBC version ${IBC_VERSION}"
