@@ -38,7 +38,7 @@ jobs:
             go.mod
             go.sum
         if: matrix.module == 'app'
-      - uses: actions/setup-go@v3
+      - uses: actions/setup-go@v4
         with:
           go-version-file: go.mod
         if: env.GIT_DIFF
