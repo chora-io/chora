@@ -13,6 +13,9 @@ build
 # default localnet
 local
 
+# temporary files
+tmp
+
 # swagger ui
 swagger-ui
 
