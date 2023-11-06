@@ -8,7 +8,7 @@ require (
 	github.com/choraio/mods/voucher v0.0.0
 	github.com/cosmos/cosmos-sdk v0.46.13
 	github.com/cosmos/ibc-go/v5 v5.3.1
-	github.com/gorilla/mux v1.8.0
+	github.com/gorilla/mux v1.8.1
 	github.com/rakyll/statik v0.1.7
 	github.com/regen-network/regen-ledger/x/data/v2 v2.0.0
 	github.com/regen-network/regen-ledger/x/intertx v1.3.2
