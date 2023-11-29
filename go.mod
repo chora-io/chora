@@ -12,7 +12,7 @@ require (
 	github.com/rakyll/statik v0.1.7
 	github.com/regen-network/regen-ledger/x/data/v2 v2.0.0
 	github.com/regen-network/regen-ledger/x/intertx v1.3.2
-	github.com/spf13/cast v1.5.1
+	github.com/spf13/cast v1.6.0
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.4
 	github.com/tendermint/tendermint v0.34.28
