@@ -760,6 +760,7 @@ func NewApp(
 		evidencetypes.ModuleName,
 		feegrant.ModuleName,
 		minttypes.ModuleName,
+		paramstypes.ModuleName,
 		slashingtypes.ModuleName,
 		stakingtypes.ModuleName,
 		vestingtypes.ModuleName,
