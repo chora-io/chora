@@ -1,21 +1,39 @@
 package app
 
 import (
-	"github.com/cosmos/cosmos-sdk/store/types"
+	"context"
+
+	storetypes "cosmossdk.io/store/types"
+	circuittypes "cosmossdk.io/x/circuit/types"
+	upgradetypes "cosmossdk.io/x/upgrade/types"
+
 	"github.com/cosmos/cosmos-sdk/types/module"
-	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 )
 
-// Upgrade defines a struct containing necessary fields that a SoftwareUpgradeProposal
-// must have written, in order for state migration to run. An upgrade must implement
-// this struct and then set the upgrade in the upgrades array in app.go.
-type Upgrade struct {
-	// HandlerName of the upgrade handler, e.g. "v2"
-	HandlerName string
+// UpgradeName defines the on-chain upgrade name.
+const UpgradeName = "v0"
 
-	// CreateUpgradeHandler defines the function that creates an upgrade handler
-	CreateUpgradeHandler func(*module.Manager, module.Configurator) upgradetypes.UpgradeHandler
+func (app *App) RegisterUpgradeHandlers() {
+	app.UpgradeKeeper.SetUpgradeHandler(
+		UpgradeName,
+		func(ctx context.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
+			return app.ModuleManager.RunMigrations(ctx, app.Configurator(), fromVM)
+		},
+	)
 
-	// Store upgrades, should be used for any new modules introduced, new modules deleted, or store names renamed.
-	StoreUpgrades types.StoreUpgrades
+	upgradeInfo, err := app.UpgradeKeeper.ReadUpgradeInfoFromDisk()
+	if err != nil {
+		panic(err)
+	}
+
+	if upgradeInfo.Name == UpgradeName && !app.UpgradeKeeper.IsSkipHeight(upgradeInfo.Height) {
+		storeUpgrades := storetypes.StoreUpgrades{
+			Added: []string{
+				circuittypes.ModuleName,
+			},
+		}
+
+		// configure store loader that checks if version == upgradeHeight and applies store upgrades
+		app.SetStoreLoader(upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, &storeUpgrades))
+	}
 }

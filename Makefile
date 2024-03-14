@@ -17,7 +17,6 @@ ifeq (,$(VERSION))
 endif
 
 SDK_VERSION := $(shell go list -m github.com/cosmos/cosmos-sdk | sed 's:.* ::')
-TM_VERSION := $(shell go list -m github.com/tendermint/tendermint | sed 's:.* ::')
 
 LEDGER_ENABLED ?= true
 
@@ -62,12 +61,12 @@ whitespace := $(empty) $(empty)
 comma := ,
 build_tags_comma_sep := $(subst $(whitespace),$(comma),$(build_tags))
 
-ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=chora \
+ldflags = \
+	-X github.com/cosmos/cosmos-sdk/version.Name=chora \
 	-X github.com/cosmos/cosmos-sdk/version.AppName=chora \
-	-X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 	-X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
-	-X github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep) \
-	-X github.com/tendermint/tendermint/version.TMCoreSemVer=$(TM_VERSION)
+	-X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
+	-X github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)
 
 ifeq ($(NO_STRIP),false)
   ldflags += -w -s
@@ -139,18 +138,12 @@ lint-fix: format
 	@echo "Attempting to fix lint errors in all go modules..."
 	@find . -name 'go.mod' -type f -execdir golangci-lint run --fix --out-format=tab --issues-exit-code=0 \;
 
-format_filter = -name '*.go' -type f
-
-format_local = \
-	github.com/tendermint/tendermint \
-	github.com/cosmos/cosmos-sdk \
-	github.com/cosmos/ibc-go \
-	github.com/choraio/chora
+format_filter = -name '*.go' -not -name 'statik.go' -type f
 
 format:
 	@echo "Formatting all go modules..."
 	@find . $(format_filter) | xargs gofmt -s -w
-	@find . $(format_filter) | xargs goimports -w -local $(subst $(whitespace),$(comma),$(format_local))
+	@find . $(format_filter) | xargs goimports -w -local github.com/chora-io/chora
 	@find . $(format_filter) | xargs misspell -w
 
 .PHONY: lint lint-fix format
@@ -162,7 +155,7 @@ format:
 GO_MAJOR_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f1)
 GO_MINOR_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f2)
 MIN_GO_MAJOR_VERSION = 1
-MIN_GO_MINOR_VERSION = 19
+MIN_GO_MINOR_VERSION = 21
 GO_VERSION_ERROR = Golang version $(GO_MAJOR_VERSION).$(GO_MINOR_VERSION) is not supported, \
 please update to at least $(MIN_GO_MAJOR_VERSION).$(MIN_GO_MINOR_VERSION)
 
@@ -227,7 +220,7 @@ test-clean:
 ###############################################################################
 
 docs:
-	@echo "Wait a few seconds and then visit http://localhost:6060/pkg/github.com/choraio/chora/"
+	@echo "Wait a few seconds and then visit http://localhost:6060/pkg/github.com/chora-io/chora/"
 	godoc -http=:6060
 
 .PHONY: docs

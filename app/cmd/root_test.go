@@ -11,7 +11,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/server/cmd"
 
-	"github.com/choraio/chora/app"
+	"github.com/chora-io/chora/app"
 )
 
 func TestInitCmd(t *testing.T) {
@@ -26,7 +26,7 @@ func TestInitCmd(t *testing.T) {
 	err = os.Mkdir(nodeHome, 0755)
 	require.NoError(t, err)
 
-	rootCmd, _ := NewRootCmd()
+	rootCmd := NewRootCmd()
 	rootCmd.SetArgs([]string{
 		"init",
 		"test",
