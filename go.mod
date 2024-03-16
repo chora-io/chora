@@ -23,7 +23,6 @@ require (
 	github.com/cosmos/gogoproto v1.4.11
 	github.com/cosmos/ibc-go/modules/capability v1.0.0
 	github.com/cosmos/ibc-go/v8 v8.1.1
-	github.com/gorilla/mux v1.8.1
 	github.com/rakyll/statik v0.1.7
 	//github.com/regen-network/regen-ledger/x/data/v2 v2.0.0
 	//github.com/regen-network/regen-ledger/x/intertx v1.3.2
@@ -110,6 +109,7 @@ require (
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
 	github.com/gorilla/handlers v1.5.2 // indirect
+	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
@@ -217,10 +217,10 @@ replace github.com/gin-gonic/gin => github.com/gin-gonic/gin v1.9.1
 replace github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
 
 // NOTE: use latest commit from chora-io/mods
-replace github.com/chora-io/mods/content => github.com/chora-io/mods/content v0.0.0-20231106214646-0b292a5ce8a9
+replace github.com/chora-io/mods/content => github.com/chora-io/mods/content v0.0.0-20240316002300-297239d96df9
 
 // NOTE: use latest commit from chora-io/mods
-replace github.com/chora-io/mods/geonode => github.com/chora-io/mods/geonode v0.0.0-20231106214646-0b292a5ce8a9
+replace github.com/chora-io/mods/geonode => github.com/chora-io/mods/geonode v0.0.0-20240316002300-297239d96df9
 
 // NOTE: use latest commit from chora-io/mods
-replace github.com/chora-io/mods/voucher => github.com/chora-io/mods/voucher v0.0.0-20231106214646-0b292a5ce8a9
+replace github.com/chora-io/mods/voucher => github.com/chora-io/mods/voucher v0.0.0-20240316002300-297239d96df9

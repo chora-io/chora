@@ -129,9 +129,9 @@ func NewRootCmd() *cobra.Command {
 }
 
 func enrichAutoCliOpts(autoCliOpts autocli.AppOptions, clientCtx client.Context) (autocli.AppOptions, error) {
-	autoCliOpts.AddressCodec = addresscodec.NewBech32Codec(sdk.GetConfig().GetBech32AccountAddrPrefix())
-	autoCliOpts.ValidatorAddressCodec = addresscodec.NewBech32Codec(sdk.GetConfig().GetBech32ValidatorAddrPrefix())
-	autoCliOpts.ConsensusAddressCodec = addresscodec.NewBech32Codec(sdk.GetConfig().GetBech32ConsensusAddrPrefix())
+	autoCliOpts.AddressCodec = addresscodec.NewBech32Codec(app.Bech32PrefixAccAddr)
+	autoCliOpts.ValidatorAddressCodec = addresscodec.NewBech32Codec(app.Bech32PrefixValAddr)
+	autoCliOpts.ConsensusAddressCodec = addresscodec.NewBech32Codec(app.Bech32PrefixConsAddr)
 
 	var err error
 	clientCtx, err = config.ReadFromClientConfig(clientCtx)

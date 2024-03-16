@@ -149,6 +149,8 @@ var (
 
 	// module account permissions
 	maccPerms = map[string][]string{
+
+		// sdk modules
 		authtypes.FeeCollectorName:     nil,
 		distrtypes.ModuleName:          nil,
 		govtypes.ModuleName:            {authtypes.Burner},
@@ -539,7 +541,7 @@ func NewApp(
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 	app.IBCFeeKeeper = ibcfeekeeper.NewKeeper(
-		app.appCodec,
+		appCodec,
 		app.keys[ibcfeetypes.StoreKey],
 		app.IBCKeeper.ChannelKeeper,
 		app.IBCKeeper.ChannelKeeper,
@@ -1020,6 +1022,7 @@ func (app *App) RegisterTendermintService(clientCtx client.Context) {
 	)
 }
 
+// RegisterNodeService implements the Application.RegisterNodeService method.
 func (app *App) RegisterNodeService(clientCtx client.Context, cfg config.Config) {
 	nodeservice.RegisterNodeService(clientCtx, app.GRPCQueryRouter(), cfg)
 }
