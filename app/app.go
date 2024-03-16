@@ -107,8 +107,6 @@ import (
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
 	ica "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts"
-	icacontrollerkeeper "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/controller/keeper"
-	icacontrollertypes "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/controller/types"
 	icahost "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/host"
 	icahostkeeper "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/host/keeper"
 	icahosttypes "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/host/types"
@@ -232,12 +230,12 @@ type App struct {
 	UpgradeKeeper         *upgradekeeper.Keeper
 
 	// ibc modules
-	CapabilityKeeper    *capabilitykeeper.Keeper
-	IBCKeeper           *ibckeeper.Keeper
-	IBCFeeKeeper        ibcfeekeeper.Keeper
-	IBCTransferKeeper   ibctransferkeeper.Keeper
-	ICAControllerKeeper icacontrollerkeeper.Keeper
-	ICAHostKeeper       icahostkeeper.Keeper
+	CapabilityKeeper  *capabilitykeeper.Keeper
+	IBCKeeper         *ibckeeper.Keeper
+	IBCFeeKeeper      ibcfeekeeper.Keeper
+	IBCTransferKeeper ibctransferkeeper.Keeper
+	//ICAControllerKeeper icacontrollerkeeper.Keeper
+	ICAHostKeeper icahostkeeper.Keeper
 
 	// regen modules
 	//InterTxKeeper intertxkeeper.Keeper
@@ -248,11 +246,11 @@ type App struct {
 	VoucherKeeper voucherkeeper.Keeper
 
 	// ibc modules (scoped)
-	ScopedIBCKeeper           capabilitykeeper.ScopedKeeper
-	ScopedIBCFeeKeeper        capabilitykeeper.ScopedKeeper
-	ScopedIBCTransferKeeper   capabilitykeeper.ScopedKeeper
-	ScopedICAControllerKeeper capabilitykeeper.ScopedKeeper
-	ScopedICAHostKeeper       capabilitykeeper.ScopedKeeper
+	ScopedIBCKeeper         capabilitykeeper.ScopedKeeper
+	ScopedIBCFeeKeeper      capabilitykeeper.ScopedKeeper
+	ScopedIBCTransferKeeper capabilitykeeper.ScopedKeeper
+	//ScopedICAControllerKeeper capabilitykeeper.ScopedKeeper
+	ScopedICAHostKeeper capabilitykeeper.ScopedKeeper
 
 	// regen modules (scoped)
 	//ScopedInterTxKeeper capabilitykeeper.ScopedKeeper
@@ -278,10 +276,10 @@ func NewApp(
 		ProtoFiles: proto.HybridResolver,
 		SigningOptions: signing.Options{
 			AddressCodec: address.Bech32Codec{
-				Bech32Prefix: sdk.GetConfig().GetBech32AccountAddrPrefix(),
+				Bech32Prefix: Bech32PrefixAccAddr,
 			},
 			ValidatorAddressCodec: address.Bech32Codec{
-				Bech32Prefix: sdk.GetConfig().GetBech32ValidatorAddrPrefix(),
+				Bech32Prefix: Bech32PrefixValAddr,
 			},
 		},
 	})
@@ -321,19 +319,19 @@ func NewApp(
 		// ibc modules
 		capabilitytypes.StoreKey,
 		ibcexported.StoreKey,
-		ibctransfertypes.StoreKey,
 		ibcfeetypes.StoreKey,
+		ibctransfertypes.StoreKey,
+		//icacontrollertypes.StoreKey,
 		icahosttypes.StoreKey,
-		icacontrollertypes.StoreKey,
 
 		// regen modules
 		//data.ModuleName,
 		//intertx.ModuleName,
 
 		// chora modules
-		content.ModuleName,
-		geonode.ModuleName,
-		voucher.ModuleName,
+		content.StoreKey,
+		geonode.StoreKey,
+		voucher.StoreKey,
 	)
 
 	// register streaming services
@@ -357,18 +355,18 @@ func NewApp(
 
 	// initialize keepers
 
-	app.ConsensusParamsKeeper = consensusparamkeeper.NewKeeper(
-		appCodec,
-		runtime.NewKVStoreService(keys[consensusparamtypes.StoreKey]),
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-		runtime.EventService{},
-	)
-
 	app.ParamsKeeper = initParamsKeeper(
 		appCodec,
 		legacyAmino,
 		keys[paramstypes.StoreKey],
 		tkeys[paramstypes.TStoreKey],
+	)
+
+	app.ConsensusParamsKeeper = consensusparamkeeper.NewKeeper(
+		appCodec,
+		runtime.NewKVStoreService(keys[consensusparamtypes.StoreKey]),
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		runtime.EventService{},
 	)
 
 	// set parameter store
@@ -418,22 +416,22 @@ func NewApp(
 		authcodec.NewBech32Codec(Bech32PrefixConsAddr),
 	)
 
-	app.MintKeeper = mintkeeper.NewKeeper(
-		appCodec,
-		runtime.NewKVStoreService(keys[minttypes.StoreKey]),
-		app.StakingKeeper,
-		app.AccountKeeper,
-		app.BankKeeper,
-		authtypes.FeeCollectorName,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-	)
-
 	app.DistrKeeper = distrkeeper.NewKeeper(
 		appCodec,
 		runtime.NewKVStoreService(keys[distrtypes.StoreKey]),
 		app.AccountKeeper,
 		app.BankKeeper,
 		app.StakingKeeper,
+		authtypes.FeeCollectorName,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+
+	app.MintKeeper = mintkeeper.NewKeeper(
+		appCodec,
+		runtime.NewKVStoreService(keys[minttypes.StoreKey]),
+		app.StakingKeeper,
+		app.AccountKeeper,
+		app.BankKeeper,
 		authtypes.FeeCollectorName,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
@@ -451,18 +449,25 @@ func NewApp(
 		stakingtypes.NewMultiStakingHooks(app.DistrKeeper.Hooks(), app.SlashingKeeper.Hooks()),
 	)
 
+	// register proposal types
+	govRouter := govv1beta1.NewRouter()
+	govRouter.AddRoute(govtypes.RouterKey, govv1beta1.ProposalHandler).
+		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper))
+
+	app.GovKeeper = *govkeeper.NewKeeper(
+		appCodec,
+		runtime.NewKVStoreService(keys[govtypes.StoreKey]),
+		app.AccountKeeper,
+		app.BankKeeper,
+		app.StakingKeeper,
+		app.DistrKeeper,
+		app.MsgServiceRouter(),
+		govtypes.DefaultConfig(),
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
+
 	// invariant check period
 	invCheckPeriod := cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod))
-
-	app.CrisisKeeper = crisiskeeper.NewKeeper(
-		appCodec,
-		runtime.NewKVStoreService(keys[crisistypes.StoreKey]),
-		invCheckPeriod,
-		app.BankKeeper,
-		authtypes.FeeCollectorName,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-		app.AccountKeeper.AddressCodec(),
-	)
 
 	app.CircuitKeeper = circuitkeeper.NewKeeper(
 		appCodec,
@@ -473,6 +478,16 @@ func NewApp(
 
 	// set circuit breaker
 	app.BaseApp.SetCircuitBreaker(&app.CircuitKeeper)
+
+	app.CrisisKeeper = crisiskeeper.NewKeeper(
+		appCodec,
+		runtime.NewKVStoreService(keys[crisistypes.StoreKey]),
+		invCheckPeriod,
+		app.BankKeeper,
+		authtypes.FeeCollectorName,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		app.AccountKeeper.AddressCodec(),
+	)
 
 	app.EvidenceKeeper = *evidencekeeper.NewKeeper(
 		appCodec,
@@ -496,23 +511,6 @@ func NewApp(
 		appCodec,
 		homePath,
 		app.BaseApp,
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-	)
-
-	// register proposal types
-	govRouter := govv1beta1.NewRouter()
-	govRouter.AddRoute(govtypes.RouterKey, govv1beta1.ProposalHandler).
-		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(app.ParamsKeeper))
-
-	app.GovKeeper = *govkeeper.NewKeeper(
-		appCodec,
-		runtime.NewKVStoreService(keys[govtypes.StoreKey]),
-		app.AccountKeeper,
-		app.BankKeeper,
-		app.StakingKeeper,
-		app.DistrKeeper,
-		app.MsgServiceRouter(),
-		govtypes.DefaultConfig(),
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 
@@ -549,7 +547,7 @@ func NewApp(
 	app.ScopedIBCKeeper = app.CapabilityKeeper.ScopeToModule(ibcexported.ModuleName)
 	app.ScopedIBCFeeKeeper = app.CapabilityKeeper.ScopeToModule(ibcfeetypes.ModuleName)
 	app.ScopedIBCTransferKeeper = app.CapabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
-	app.ScopedICAControllerKeeper = app.CapabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
+	//app.ScopedICAControllerKeeper = app.CapabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
 	app.ScopedICAHostKeeper = app.CapabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
 
 	// grant capabilities for regen modules
@@ -567,6 +565,7 @@ func NewApp(
 		app.ScopedIBCKeeper,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
+
 	app.IBCFeeKeeper = ibcfeekeeper.NewKeeper(
 		appCodec,
 		app.keys[ibcfeetypes.StoreKey],
@@ -576,6 +575,7 @@ func NewApp(
 		app.AccountKeeper,
 		app.BankKeeper,
 	)
+
 	app.IBCTransferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec,
 		keys[ibctransfertypes.StoreKey],
@@ -588,17 +588,19 @@ func NewApp(
 		app.ScopedIBCTransferKeeper,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
-	app.ICAControllerKeeper = icacontrollerkeeper.NewKeeper(
-		appCodec,
-		keys[icacontrollertypes.StoreKey],
-		app.GetSubspace(icacontrollertypes.SubModuleName),
-		app.IBCFeeKeeper,
-		app.IBCKeeper.ChannelKeeper,
-		app.IBCKeeper.PortKeeper,
-		app.ScopedICAControllerKeeper,
-		app.MsgServiceRouter(),
-		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
-	)
+
+	//app.ICAControllerKeeper = icacontrollerkeeper.NewKeeper(
+	//	appCodec,
+	//	keys[icacontrollertypes.StoreKey],
+	//	app.GetSubspace(icacontrollertypes.SubModuleName),
+	//	app.IBCFeeKeeper,
+	//	app.IBCKeeper.ChannelKeeper,
+	//	app.IBCKeeper.PortKeeper,
+	//	app.ScopedICAControllerKeeper,
+	//	app.MsgServiceRouter(),
+	//	authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	//)
+
 	app.ICAHostKeeper = icahostkeeper.NewKeeper(
 		appCodec,
 		app.keys[icahosttypes.StoreKey],
@@ -623,15 +625,15 @@ func NewApp(
 	// initialize keepers (chora modules)
 
 	app.ContentKeeper = contentkeeper.NewKeeper(
-		runtime.NewKVStoreService(app.keys[content.ModuleName]),
+		runtime.NewKVStoreService(app.keys[content.StoreKey]),
 	)
 
 	app.GeonodeKeeper = geonodekeeper.NewKeeper(
-		runtime.NewKVStoreService(app.keys[geonode.ModuleName]),
+		runtime.NewKVStoreService(app.keys[geonode.StoreKey]),
 	)
 
 	app.VoucherKeeper = voucherkeeper.NewKeeper(
-		runtime.NewKVStoreService(app.keys[voucher.ModuleName]),
+		runtime.NewKVStoreService(app.keys[voucher.StoreKey]),
 	)
 
 	// register IBC router
@@ -686,9 +688,10 @@ func NewApp(
 		// ibc modules
 		capability.NewAppModule(appCodec, *app.CapabilityKeeper, false),
 		ibc.NewAppModule(app.IBCKeeper),
-		ibctransfer.NewAppModule(app.IBCTransferKeeper),
-		ica.NewAppModule(&app.ICAControllerKeeper, &app.ICAHostKeeper),
 		ibcfee.NewAppModule(app.IBCFeeKeeper),
+		ibctransfer.NewAppModule(app.IBCTransferKeeper),
+		//ica.NewAppModule(&app.ICAControllerKeeper, &app.ICAHostKeeper),
+		ica.NewAppModule(nil, &app.ICAHostKeeper),
 
 		// regen modules
 		//datamodule.NewModule(app.keys[data.ModuleName], app.AccountKeeper, app.BankKeeper, data.Config{
@@ -767,9 +770,9 @@ func NewApp(
 		// ibc modules
 		capabilitytypes.ModuleName,
 		ibcexported.ModuleName,
+		ibcfeetypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		icatypes.ModuleName,
-		ibcfeetypes.ModuleName,
 
 		// regen modules
 		//data.ModuleName,
@@ -781,6 +784,8 @@ func NewApp(
 		voucher.ModuleName,
 	)
 
+	// NOTE: crisis module must come after distr module
+	// NOTE: crisis module must come after staking module
 	// NOTE: genutils module must come after auth module
 	// NOTE: genutils module must come after staking module
 	// NOTE: capability module must come before any modules using capabilities (e.g. IBC)
@@ -790,26 +795,26 @@ func NewApp(
 		banktypes.ModuleName,
 		circuittypes.ModuleName,
 		consensusparamtypes.ModuleName,
-		crisistypes.ModuleName,
 		distrtypes.ModuleName,
-		govtypes.ModuleName,
-		group.ModuleName,
 		evidencetypes.ModuleName,
 		feegrant.ModuleName,
+		govtypes.ModuleName,
+		group.ModuleName,
 		minttypes.ModuleName,
 		paramstypes.ModuleName,
 		slashingtypes.ModuleName,
 		stakingtypes.ModuleName,
 		vestingtypes.ModuleName,
 		upgradetypes.ModuleName,
+		crisistypes.ModuleName,
 		genutiltypes.ModuleName,
 
 		// ibc modules
 		capabilitytypes.ModuleName,
-		ibctransfertypes.ModuleName,
 		ibcexported.ModuleName,
-		icatypes.ModuleName,
 		ibcfeetypes.ModuleName,
+		ibctransfertypes.ModuleName,
+		icatypes.ModuleName,
 
 		// regen modules
 		//data.ModuleName,
@@ -846,6 +851,7 @@ func NewApp(
 
 	// initialize stores
 	app.MountKVStores(keys)
+	app.MountMemoryStores(memKeys)
 	app.MountTransientStores(tkeys)
 
 	// initialize BaseApp
@@ -978,9 +984,9 @@ func (app *App) AutoCliOpts() autocli.AppOptions {
 	return autocli.AppOptions{
 		Modules:               modules,
 		ModuleOptions:         runtimeservices.ExtractAutoCLIOptions(app.ModuleManager.Modules),
-		AddressCodec:          authcodec.NewBech32Codec(sdk.GetConfig().GetBech32AccountAddrPrefix()),
-		ValidatorAddressCodec: authcodec.NewBech32Codec(sdk.GetConfig().GetBech32ValidatorAddrPrefix()),
-		ConsensusAddressCodec: authcodec.NewBech32Codec(sdk.GetConfig().GetBech32ConsensusAddrPrefix()),
+		AddressCodec:          authcodec.NewBech32Codec(Bech32PrefixAccAddr),
+		ValidatorAddressCodec: authcodec.NewBech32Codec(Bech32PrefixValAddr),
+		ConsensusAddressCodec: authcodec.NewBech32Codec(Bech32PrefixConsAddr),
 	}
 }
 

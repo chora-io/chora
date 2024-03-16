@@ -216,11 +216,14 @@ replace github.com/gin-gonic/gin => github.com/gin-gonic/gin v1.9.1
 // TODO: https://github.com/cosmos/cosmos-sdk/issues/10220
 replace github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
 
-// NOTE: use latest commit from chora-io/mods
-replace github.com/chora-io/mods/content => github.com/chora-io/mods/content v0.0.0-20240316171928-b66561af2398
+// NOTE: goleveldb is not actively maintained and will be replaced in a future version
+replace github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 
 // NOTE: use latest commit from chora-io/mods
-replace github.com/chora-io/mods/geonode => github.com/chora-io/mods/geonode v0.0.0-20240316171928-b66561af2398
+replace github.com/chora-io/mods/content => github.com/chora-io/mods/content v0.0.0-20240316233034-1ca00d160986
 
 // NOTE: use latest commit from chora-io/mods
-replace github.com/chora-io/mods/voucher => github.com/chora-io/mods/voucher v0.0.0-20240316171928-b66561af2398
+replace github.com/chora-io/mods/geonode => github.com/chora-io/mods/geonode v0.0.0-20240316233034-1ca00d160986
+
+// NOTE: use latest commit from chora-io/mods
+replace github.com/chora-io/mods/voucher => github.com/chora-io/mods/voucher v0.0.0-20240316233034-1ca00d160986

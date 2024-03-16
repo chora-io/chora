@@ -278,7 +278,7 @@ func appExport(
 	appOpts servertypes.AppOptions,
 	modulesToExport []string,
 ) (servertypes.ExportedApp, error) {
-	var simApp *app.App
+	var a *app.App
 
 	// this check is necessary as we use the flag in x/upgrade.
 	// we can exit more gracefully by checking the flag here.
@@ -297,16 +297,16 @@ func appExport(
 	appOpts = viperAppOpts
 
 	if height != -1 {
-		simApp = app.NewApp(logger, db, traceStore, false, appOpts)
+		a = app.NewApp(logger, db, traceStore, false, appOpts)
 
-		if err := simApp.LoadHeight(height); err != nil {
+		if err := a.LoadHeight(height); err != nil {
 			return servertypes.ExportedApp{}, err
 		}
 	} else {
-		simApp = app.NewApp(logger, db, traceStore, true, appOpts)
+		a = app.NewApp(logger, db, traceStore, true, appOpts)
 	}
 
-	return simApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs, modulesToExport)
+	return a.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs, modulesToExport)
 }
 
 var tempDir = func() string {

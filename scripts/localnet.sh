@@ -41,24 +41,26 @@ fi
 
 make build
 
-./build/chora config chain-id "$chain_id"
+./build/chora config set client chain-id "$chain_id" --home "$home"
 
-./build/chora config keyring-backend test
+./build/chora config set client keyring-backend test --home "$home"
 
-# TODO: keyring-backed config option does not work with add-genesis command
-echo "$mnemonic" | ./build/chora keys add test --home "$home" --keyring-backend test --recover
+# NOTE: keyring-backend config setting does not work with keys add command
+echo "$mnemonic" | ./build/chora keys add validator --home "$home" --keyring-backend test --recover
 
-# TODO: chain-id flag does not work with init command
-./build/chora init test --home "$home" --chain-id "$chain_id"
+# NOTE: chain-id config setting does not work with init command
+./build/chora init validator --home "$home" --chain-id "$chain_id"
 
-# TODO: keyring-backed config option does not work with add-genesis command
-./build/chora add-genesis-account test 5000000000stake --home "$home" --keyring-backend test
+# NOTE: keyring-backed config setting does not work with genesis add-genesis-account command
+./build/chora genesis add-genesis-account validator 5000000000uchora --home "$home" --keyring-backend test
 
-# TODO: keyring-backed and chain-id config options do not work with gentx command
-./build/chora gentx test 1000000stake --keyring-backend test --home "$home" --chain-id "$chain_id"
+# NOTE: keyring-backed and chain-id config settings do not work with genesis gentx command
+./build/chora genesis gentx validator 1000000uchora --keyring-backend test --home "$home" --chain-id "$chain_id"
 
-./build/chora collect-gentxs --home "$home"
+./build/chora genesis collect-gentxs --home "$home"
+
+sed -i "s/stake/uchora/g" "$home/config/genesis.json"
 
 cat <<< $(jq '.app_state.gov.voting_params.voting_period = "20s"' "$home"/config/genesis.json) > "$home/config/genesis.json"
 
-./build/chora start --api.enable true --api.swagger true --api.enabled-unsafe-cors --minimum-gas-prices 0stake --home "$home"
+./build/chora start --api.enable true --api.swagger true --api.enabled-unsafe-cors --minimum-gas-prices 0chora --home "$home"

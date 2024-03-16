@@ -6,23 +6,26 @@ SWAGGER_DIR=./docs
 SWAGGER_UI_DIR=${SWAGGER_DIR}/swagger-ui
 
 #SDK_VERSION=$(go list -m -f '{{ .Version }}' github.com/cosmos/cosmos-sdk)
-IBC_VERSION=$(go list -m -f '{{ .Version }}' github.com/cosmos/ibc-go/v8)
+#IBC_VERSION=$(go list -m -f '{{ .Version }}' github.com/cosmos/ibc-go/v8)
 #REGEN_VERSION=$(go list -m -f '{{ .Version }}' github.com/regen-network/regen-ledger/v5)
 #CHORA_CONTENT_VERSION=$(go list -m -f '{{ .Version }}' github.com/chora-io/mods/content)
 #CHORA_GEONODE_VERSION=$(go list -m -f '{{ .Version }}' github.com/chora-io/mods/geonode)
 #CHORA_VOUCHER_VERSION=$(go list -m -f '{{ .Version }}' github.com/chora-io/mods/geonode)
-CHORA_CONTENT_VERSION=f4910f6a9bf88dd3441a991a8407c3084015efeb
-CHORA_GEONODE_VERSION=f4910f6a9bf88dd3441a991a8407c3084015efeb
-CHORA_VOUCHER_VERSION=f4910f6a9bf88dd3441a991a8407c3084015efeb
+CHORA_CONTENT_VERSION=1ca00d160986371078040aabd2d7dc0aa1cf38c5
+CHORA_GEONODE_VERSION=1ca00d160986371078040aabd2d7dc0aa1cf38c5
+CHORA_VOUCHER_VERSION=1ca00d160986371078040aabd2d7dc0aa1cf38c5
 
 #SDK_RAW_URL=https://raw.githubusercontent.com/cosmos/cosmos-sdk/${SDK_VERSION}/client/docs/swagger-ui/swagger.yaml
-IBC_RAW_URL=https://raw.githubusercontent.com/cosmos/ibc-go/${IBC_VERSION}/docs/client/swagger-ui/swagger.yaml
+#IBC_RAW_URL=https://raw.githubusercontent.com/cosmos/ibc-go/${IBC_VERSION}/docs/client/swagger-ui/swagger.yaml
 #REGEN_RAW_URL=https://raw.githubusercontent.com/cosmos/cosmos-sdk/${REGEN_VERSION}/app/client/docs/swagger-ui/swagger.yaml
 CHORA_CONTENT_RAW_URL=https://raw.githubusercontent.com/chora-io/mods/${CHORA_CONTENT_VERSION}/content/docs/swagger.yaml
 CHORA_GEONODE_RAW_URL=https://raw.githubusercontent.com/chora-io/mods/${CHORA_GEONODE_VERSION}/geonode/docs/swagger.yaml
 CHORA_VOUCHER_RAW_URL=https://raw.githubusercontent.com/chora-io/mods/${CHORA_VOUCHER_VERSION}/voucher/docs/swagger.yaml
 
-SWAGGER_UI_VERSION=4.11.0
+# TODO: investigate no docs available with v8.1 but docs available with v8.0 and main
+IBC_RAW_URL=https://raw.githubusercontent.com/cosmos/ibc-go/v8.0.0/docs/client/swagger-ui/swagger.yaml
+
+SWAGGER_UI_VERSION=5.12.0
 SWAGGER_UI_DOWNLOAD_URL=https://github.com/swagger-api/swagger-ui/archive/refs/tags/v${SWAGGER_UI_VERSION}.zip
 SWAGGER_UI_PACKAGE_NAME=${SWAGGER_DIR}/swagger-ui-${SWAGGER_UI_VERSION}
 
