@@ -143,6 +143,33 @@ import (
 	_ "github.com/chora-io/chora/docs/statik"
 )
 
+const (
+	// Name is the name of the application.
+	Name = "chora"
+
+	// EnvPrefix is the environment variable prefix used to map environment
+	// variables to command flags.
+	EnvPrefix = "CHORA"
+
+	// Bech32PrefixAccAddr defines the Bech32 prefix of an account's address.
+	Bech32PrefixAccAddr = Name
+
+	// Bech32PrefixAccPub defines the Bech32 prefix of an account's public key.
+	Bech32PrefixAccPub = Name + "pub"
+
+	// Bech32PrefixValAddr defines the Bech32 prefix of a validator's operator address.
+	Bech32PrefixValAddr = Name + "valoper"
+
+	// Bech32PrefixValPub defines the Bech32 prefix of a validator's operator public key.
+	Bech32PrefixValPub = Name + "valoperpub"
+
+	// Bech32PrefixConsAddr defines the Bech32 prefix of a consensus node address.
+	Bech32PrefixConsAddr = Name + "valcons"
+
+	// Bech32PrefixConsPub defines the Bech32 prefix of a consensus node public key.
+	Bech32PrefixConsPub = Name + "valconspub"
+)
+
 var (
 	// DefaultNodeHome default home directory for the application daemon.
 	DefaultNodeHome = os.ExpandEnv("$HOME/." + Name)
@@ -595,9 +622,17 @@ func NewApp(
 
 	// initialize keepers (chora modules)
 
-	app.ContentKeeper = contentkeeper.NewKeeper()
-	app.GeonodeKeeper = geonodekeeper.NewKeeper()
-	app.VoucherKeeper = voucherkeeper.NewKeeper()
+	app.ContentKeeper = contentkeeper.NewKeeper(
+		runtime.NewKVStoreService(app.keys[content.ModuleName]),
+	)
+
+	app.GeonodeKeeper = geonodekeeper.NewKeeper(
+		runtime.NewKVStoreService(app.keys[geonode.ModuleName]),
+	)
+
+	app.VoucherKeeper = voucherkeeper.NewKeeper(
+		runtime.NewKVStoreService(app.keys[voucher.ModuleName]),
+	)
 
 	// register IBC router
 	ibcRouter := porttypes.NewRouter()

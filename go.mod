@@ -217,10 +217,10 @@ replace github.com/gin-gonic/gin => github.com/gin-gonic/gin v1.9.1
 replace github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
 
 // NOTE: use latest commit from chora-io/mods
-replace github.com/chora-io/mods/content => github.com/chora-io/mods/content v0.0.0-20240316002300-297239d96df9
+replace github.com/chora-io/mods/content => github.com/chora-io/mods/content v0.0.0-20240316171928-b66561af2398
 
 // NOTE: use latest commit from chora-io/mods
-replace github.com/chora-io/mods/geonode => github.com/chora-io/mods/geonode v0.0.0-20240316002300-297239d96df9
+replace github.com/chora-io/mods/geonode => github.com/chora-io/mods/geonode v0.0.0-20240316171928-b66561af2398
 
 // NOTE: use latest commit from chora-io/mods
-replace github.com/chora-io/mods/voucher => github.com/chora-io/mods/voucher v0.0.0-20240316002300-297239d96df9
+replace github.com/chora-io/mods/voucher => github.com/chora-io/mods/voucher v0.0.0-20240316171928-b66561af2398
