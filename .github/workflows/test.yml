@@ -29,14 +29,14 @@ jobs:
       matrix:
         module: [app]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: technote-space/get-diff-action@v6
         with:
           PATTERNS: |
             **/**.go
             **/go.mod
             **/go.sum
-      - uses: actions/setup-go@v4
+      - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
         if: env.GIT_DIFF || github.ref == 'refs/heads/main'
@@ -58,20 +58,20 @@ jobs:
       pull-requests: read  # for technote-space/get-diff-action to get git reference
     needs: [unit]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: technote-space/get-diff-action@v6
         with:
           PATTERNS: |
             **/**.go
             **/go.mod
             **/go.sum
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: coverage-app
         if: env.GIT_DIFF || github.ref == 'refs/heads/main'
       - run: make test-coverage
         if: env.GIT_DIFF || github.ref == 'refs/heads/main'
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         with:
           file: coverage.txt
         if: env.GIT_DIFF || github.ref == 'refs/heads/main'

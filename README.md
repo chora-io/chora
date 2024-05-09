@@ -4,7 +4,7 @@ proof-of-stake blockchain application built with [Cosmos SDK](https://github.com
 
 ## Prerequisites
 
-- [Go >= 1.20](https://golang.org/doc/install)
+- [Go >= 1.22](https://golang.org/doc/install)
 
 ## Documentation
 
