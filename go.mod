@@ -17,7 +17,7 @@ require (
 	github.com/chora-io/mods/content v0.0.0
 	github.com/chora-io/mods/geonode v0.0.0
 	github.com/chora-io/mods/voucher v0.0.0
-	github.com/cometbft/cometbft v0.38.6
+	github.com/cometbft/cometbft v0.38.7
 	github.com/cosmos/cosmos-db v1.0.2
 	github.com/cosmos/cosmos-sdk v0.50.6
 	github.com/cosmos/gogoproto v1.4.12
