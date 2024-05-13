@@ -3,7 +3,7 @@ module github.com/chora-io/chora
 go 1.22
 
 require (
-	cosmossdk.io/api v0.7.4
+	cosmossdk.io/api v0.7.5
 	cosmossdk.io/client/v2 v2.0.0-beta.1
 	cosmossdk.io/core v0.12.0
 	cosmossdk.io/log v1.3.1
