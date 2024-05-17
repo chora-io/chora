@@ -22,7 +22,7 @@ require (
 	github.com/cosmos/cosmos-sdk v0.50.6
 	github.com/cosmos/gogoproto v1.4.12
 	github.com/cosmos/ibc-go/modules/capability v1.0.0
-	github.com/cosmos/ibc-go/v8 v8.1.1
+	github.com/cosmos/ibc-go/v8 v8.3.0
 	github.com/rakyll/statik v0.1.7
 	//github.com/regen-network/regen-ledger/x/data/v2 v2.0.0
 	//github.com/regen-network/regen-ledger/x/intertx v1.3.2
