@@ -106,7 +106,6 @@ import (
 	"github.com/cosmos/ibc-go/modules/capability"
 	capabilitykeeper "github.com/cosmos/ibc-go/modules/capability/keeper"
 	capabilitytypes "github.com/cosmos/ibc-go/modules/capability/types"
-	ica "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts"
 	icahost "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/host"
 	icahostkeeper "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/host/keeper"
 	icahosttypes "github.com/cosmos/ibc-go/v8/modules/apps/27-interchain-accounts/host/types"
@@ -691,7 +690,6 @@ func NewApp(
 		ibcfee.NewAppModule(app.IBCFeeKeeper),
 		ibctransfer.NewAppModule(app.IBCTransferKeeper),
 		//ica.NewAppModule(&app.ICAControllerKeeper, &app.ICAHostKeeper),
-		ica.NewAppModule(nil, &app.ICAHostKeeper),
 
 		// regen modules
 		//datamodule.NewModule(app.keys[data.ModuleName], app.AccountKeeper, app.BankKeeper, data.Config{
